@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+// @import './assets/fonts/Futura_Heavy.ttf';
+// @import './assets/fonts/Futura_Light.ttf';
+// @import './assets/fonts/Futura_Medium_BT.ttf';
+
+@font-face {
+    font-family: 'Futura_Heavy';
+    src: url('./assets/fonts/Futura_Heavy.ttf');
+  }
+  @font-face {
+    font-family: 'Futura_Light';
+    src: url('./assets/fonts/Futura_Light.ttf');
+  }
+  @font-face {
+    font-family: 'Futura_Medium_BT';
+    src: url('./assets/fonts/Futura_Medium_BT.ttf');
+  }
+body {
+    background-image: url('./assets/img/background.jpg');
+    background-position: initial;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

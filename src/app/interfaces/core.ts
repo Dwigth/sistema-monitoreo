@@ -1,10 +1,12 @@
 export interface IMonitoredWebsite {
+    id: number;
     url: string;
     name: string;
     statusResponseCode: number;
 }
 
 export interface IMonitoredDatabase {
+    id: number;
     url: string;
     port: number;
     name: string;
@@ -13,8 +15,9 @@ export interface IMonitoredDatabase {
 }
 
 export interface IMonitoredApplication {
-    website: IMonitoredWebsite;
-    database: IMonitoredDatabase;
+    id: number;
+    website: IMonitoredWebsite[];
+    database: IMonitoredDatabase[];
 }
 
 export interface IMonitorConfiguration {

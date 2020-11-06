@@ -24,6 +24,7 @@
     "concurrently": "^5.3.0",
     "express": "^4.17.1",
     "ngx-socket-io": "^3.2.0",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "~6.5.4",
     "socket.io": "^2.3.0",
     "sqlite3": "^5.0.0",

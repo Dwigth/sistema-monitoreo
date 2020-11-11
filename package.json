@@ -4,11 +4,14 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "watch-ts": "tsc -w -p tsconfig.server.json",
+    "watch-js": "nodemon server/server.js",
     "start-server": "concurrently \"tsc -w -p tsconfig.server.json\" \"nodemon server/server.js\"",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "install-dependencies": "npm install"
   },
   "private": true,
   "dependencies": {

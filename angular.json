@@ -125,5 +125,8 @@
       }
     }
   },
-  "defaultProject": "monitoreo"
+  "defaultProject": "monitoreo",
+  "cli": {
+    "analytics": "ff1234f6-c3e5-407b-9867-a73e1d7b5d1e"
+  }
 }

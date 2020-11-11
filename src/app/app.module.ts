@@ -7,6 +7,8 @@ import { MainComponent } from './pages/main/main.component';
 import { DetailsComponent } from './pages/details/details.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SystemInfoComponent } from './pages/main/system-info/system-info.component';
+import { ConfigComponent } from './pages/config/config.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -15,11 +17,14 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     AppComponent,
     MainComponent,
     DetailsComponent,
-    SystemInfoComponent
+    SystemInfoComponent,
+    ConfigComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     SocketIoModule.forRoot(config)
   ],
   providers: [],

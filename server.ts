@@ -44,7 +44,7 @@ createConnection().then(async connection => {
                     // Accediendo a estatuses de las páginas web
                     const response = {
                         websiteUrl: website.url,
-                        responseStatus: {}
+                        responseStatus: {},
                     }
                     const axiosResponse = await axios.get(website.url).catch(e => e.response);
                     response.responseStatus = axiosResponse.status
@@ -54,7 +54,7 @@ createConnection().then(async connection => {
 
                 return {
                     id: system.id,
-                    system: system.systemName,
+                    systemName: system.systemName,
                     websites
                 }
             });

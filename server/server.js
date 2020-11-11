@@ -37,7 +37,7 @@ typeorm_1.createConnection().then((connection) => tslib_1.__awaiter(void 0, void
                     // Accediendo a estatuses de las páginas web
                     const response = {
                         websiteUrl: website.url,
-                        responseStatus: {}
+                        responseStatus: {},
                     };
                     const axiosResponse = yield axios_1.default.get(website.url).catch(e => e.response);
                     response.responseStatus = axiosResponse.status;
@@ -45,7 +45,7 @@ typeorm_1.createConnection().then((connection) => tslib_1.__awaiter(void 0, void
                 }))) : null;
                 return {
                     id: system.id,
-                    system: system.systemName,
+                    systemName: system.systemName,
                     websites
                 };
             }));

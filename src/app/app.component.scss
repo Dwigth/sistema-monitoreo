@@ -1,3 +1,7 @@
+.menu {
+    position: relative;
+}
+
 .title {
     font-family: 'Futura_Heavy';
     font-size: 35px;
@@ -6,4 +10,16 @@
 
 .title b {
     color: #862347;
+}
+
+.config {
+    position: absolute;
+    font-family: 'Futura_Heavy';
+    font-size: 20px;
+    top: 5px;
+    right: 0;
+    margin-right: 15px;
+}
+.config a {
+    color: #707070;
 }

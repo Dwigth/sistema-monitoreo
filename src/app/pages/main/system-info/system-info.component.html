@@ -1,125 +1,13 @@
-<div class="system-info-card border-idle">
+<div *ngIf="MonitoredApplication != undefined" class="system-info-card border-idle">
     <div class="status-dot idle"></div>
     <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> CITAS</div>
+    <div class="system-title-name"> {{MonitoredApplication.systemName}}</div>
     <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
+    <div class="system-database" *ngIf="MonitoredApplication.databases != undefined">
+        <div class="status-dot idle"*ngIf="MonitoredApplication.databases.length > 0"></div>
     </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-time-response">
-        <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
-    </div>
-</div>
-<div class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
-    <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> RECAUDADOR</div>
-    <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-time-response">
-        <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
-    </div>
-</div>
-<div class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
-    <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> RH</div>
-    <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-time-response">
-        <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
-    </div>
-</div>
-<div class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
-    <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> RH</div>
-    <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-time-response">
-        <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
-    </div>
-</div>
-<div class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
-    <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> RH</div>
-    <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-time-response">
-        <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
-    </div>
-</div>
-<div class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
-    <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> RH</div>
-    <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-time-response">
-        <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
-    </div>
-</div>
-<div class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
-    <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> RH</div>
-    <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-time-response">
-        <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
-    </div>
-</div>
-<div class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
-    <div class="system-title"> SISTEMA DE</div>
-    <div class="system-title-name"> RH</div>
-    <div class="system-divider"></div>
-    <div class="system-database">
-        <div class="status-dot idle"></div>
-    </div>
-    <div class="system-cloud">
-        <div class="status-dot idle"></div>
+    <div class="system-cloud" *ngIf="MonitoredApplication.websites != undefined">
+        <div class="status-dot idle"*ngIf="MonitoredApplication.websites.length > 0"></div>
     </div>
     <div class="system-time-response">
         <img src="/assets/img/alerta.png" alt="">

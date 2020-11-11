@@ -1,3 +1,6 @@
 <div style="margin-top: 5rem; margin-left: 11rem;">
-    <app-system-info></app-system-info>
+    
+        
+        <app-system-info *ngFor="let system of systems" [MonitoredApplication]="system"></app-system-info>
+    
 </div>

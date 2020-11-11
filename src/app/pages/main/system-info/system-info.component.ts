@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { IMonitoredApplication } from 'src/app/interfaces/core';
 
 @Component({
   selector: 'app-system-info',
@@ -9,7 +10,11 @@ export class SystemInfoComponent implements OnInit {
 
   constructor() { }
 
+  @Input() MonitoredApplication:IMonitoredApplication;
+
   ngOnInit(): void {
+    console.log(this.MonitoredApplication);
+    
   }
 
 }

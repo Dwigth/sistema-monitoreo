@@ -5,6 +5,13 @@ export interface IMonitoredWebsite {
     statusResponseCode: number;
 }
 
+export interface IMonitoredWebservice {
+    id: number;
+    url: string;
+    name: string;
+    statusResponseCode: number;
+}
+
 export interface IMonitoredDatabase {
     id: number;
     url: string;
@@ -16,8 +23,10 @@ export interface IMonitoredDatabase {
 
 export interface IMonitoredApplication {
     id: number;
-    website: IMonitoredWebsite[];
-    database: IMonitoredDatabase[];
+    systemName:string;
+    websites: IMonitoredWebsite[];
+    databases: IMonitoredDatabase[];
+    webservices: IMonitoredWebservice[];
 }
 
 export interface IMonitorConfiguration {

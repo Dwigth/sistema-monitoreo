@@ -1,0 +1,57 @@
+<div class="container mt-5">
+    <form [formGroup]="MonitoredSystemForm" class="form">
+        <h2>Información general</h2>
+        <div class="form-group">
+            <label for="monitoredAppName">Nombre de aplicación</label>
+            <input formControlName="systemName" class="form-control" type="text" id="monitoredAppName">
+        </div>
+        <hr>
+        <h5>Sitios web</h5>
+        <div class="form-group">
+            <label for="website">Nombre del sitio web</label>
+            <input class="form-control" type="text" id="website">
+        </div>
+        <div class="form-group">
+            <label for="website">URL del sitio web</label>
+            <input class="form-control" type="text" id="website">
+        </div>
+        <div class="form-group">
+            <label for="website">URL del sitio web</label>
+            <input class="form-control" type="text" id="website">
+        </div>
+        <button class="btn">Agregar sitio web</button>
+        <table>
+            <thead>
+                <th>Sitio web</th>
+                <th>URL</th>
+            </thead>
+            <tbody>
+                <tr></tr>
+            </tbody>
+        </table>
+        <hr>
+        <h5>Servicios web</h5>
+        <div class="form-group">
+            <label for="website">Nombre del servicio web</label>
+            <input class="form-control" type="text" id="website">
+        </div>
+        <div class="form-group">
+            <label for="website">URL del servicio web</label>
+            <input class="form-control" type="text" id="website">
+        </div>
+        <div class="form-group">
+            <label for="website">URL del servicio web</label>
+            <input class="form-control" type="text" id="website">
+        </div>
+        <button class="btn">Agregar servicio web</button>
+        <table>
+            <thead>
+                <th>Servicio web</th>
+                <th>URL</th>
+            </thead>
+            <tbody>
+                <tr></tr>
+            </tbody>
+        </table>
+    </form>
+</div>

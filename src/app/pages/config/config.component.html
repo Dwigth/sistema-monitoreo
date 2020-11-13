@@ -1,57 +1,158 @@
-<div class="container mt-5">
-    <form [formGroup]="MonitoredSystemForm" class="form">
-        <h2>Información general</h2>
-        <div class="form-group">
-            <label for="monitoredAppName">Nombre de aplicación</label>
-            <input formControlName="systemName" class="form-control" type="text" id="monitoredAppName">
+<div class="panel"></div>
+<main class="freeBird">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class="jumbotron">
+                    <div class="card-block">
+                        <button class="btn btn-primary btn-lg active" data-toggle="modal" data-target="#agregar">
+                            Agregar nuevo sistema monitoreado
+                        </button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="agregar" tabindex="-1" role="dialog" aria-labelledby="agregarLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="agregarLabel">Ventana de creación de sistema</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <input class="form-control" type="text" name=""
+                                            placeholder="Nombre del sistema">
+                                        <hr>
+
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div *ngFor="let system of LocalMonitoredSystems" class="col-md-6 ">
+                <div class="jumbotron">
+                    <h2 class="h2-responsive"><strong>Sistema de {{system.systemName}}</strong></h2>
+                    <p>Agrega nuevos sistemas para monitorear</p>
+
+                    <!--Naked Form-->
+                    <div class="card-block">
+
+                        <!--Body-->
+                        <form action="#">
+
+                            <h5 class="h5-responsive">Nombre del sistema</h5>
+                            <!-- Basic textbox -->
+                            <div class="md-form">
+                                <input type="text" id="form1" [value]="system.systemName" class="form-control">
+                            </div>
+                            <!-- /.Basic textbox -->
+
+                            <h5 class="mt-4 h5-responsive">Sitios web</h5>
+                            <table class="table">
+                                <caption>Sitios web asociados a este sistema</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            URL
+                                        </th>
+
+                                        <th scope="col">
+                                            Estatus
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let web of system.websites">
+                                        <td>{{web.url}}</td>
+                                        <td>{{web.statusResponseCode}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-xs-left">
+                                <button class="btn btn-primary active">Editar sitios web</button>
+                            </div>
+
+                            <h5 class="mt-4 h5-responsive">Servicios web</h5>
+                            <table class="table">
+                                <caption>Servicios web asociados a este sistema</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            URL
+                                        </th>
+
+                                        <th scope="col">
+                                            Estatus
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let web of system.websites">
+                                        <td>{{web.url}}</td>
+                                        <td>{{web.statusResponseCode}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-xs-left">
+                                <button class="btn btn-primary active">Editar servicios web</button>
+                            </div>
+
+                            <h5 class="mt-4 h5-responsive">Bases de datos</h5>
+                            <table class="table table-responsive">
+                                <caption>Bases de datos asociados a este sistema</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            URL
+                                        </th>
+
+                                        <th scope="col">
+                                            Estatus
+                                        </th>
+                                        <th scope="col">
+                                            Puerto
+                                        </th>
+                                        <th scope="col">
+                                            Usuario
+                                        </th>
+                                        <th scope="col">
+                                            Contraseña
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let web of system.websites">
+                                        <td>{{web.url}}</td>
+                                        <td>{{web.statusResponseCode}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-xs-left">
+                                <button class="btn btn-primary active">Editar bases de datos</button>
+                            </div>
+
+
+
+                            <hr>
+                            <div class="text-xs-left">
+                                <button class="btn btn-primary active">Finalizar</button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <hr>
-        <h5>Sitios web</h5>
-        <div class="form-group">
-            <label for="website">Nombre del sitio web</label>
-            <input class="form-control" type="text" id="website">
-        </div>
-        <div class="form-group">
-            <label for="website">URL del sitio web</label>
-            <input class="form-control" type="text" id="website">
-        </div>
-        <div class="form-group">
-            <label for="website">URL del sitio web</label>
-            <input class="form-control" type="text" id="website">
-        </div>
-        <button class="btn">Agregar sitio web</button>
-        <table>
-            <thead>
-                <th>Sitio web</th>
-                <th>URL</th>
-            </thead>
-            <tbody>
-                <tr></tr>
-            </tbody>
-        </table>
-        <hr>
-        <h5>Servicios web</h5>
-        <div class="form-group">
-            <label for="website">Nombre del servicio web</label>
-            <input class="form-control" type="text" id="website">
-        </div>
-        <div class="form-group">
-            <label for="website">URL del servicio web</label>
-            <input class="form-control" type="text" id="website">
-        </div>
-        <div class="form-group">
-            <label for="website">URL del servicio web</label>
-            <input class="form-control" type="text" id="website">
-        </div>
-        <button class="btn">Agregar servicio web</button>
-        <table>
-            <thead>
-                <th>Servicio web</th>
-                <th>URL</th>
-            </thead>
-            <tbody>
-                <tr></tr>
-            </tbody>
-        </table>
-    </form>
-</div>
+    </div>
+</main>

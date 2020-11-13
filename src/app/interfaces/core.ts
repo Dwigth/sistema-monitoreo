@@ -9,6 +9,7 @@ export interface IMonitoredWebservice {
     id: number;
     url: string;
     name: string;
+    token?: string;
     statusResponseCode: number;
 }
 
@@ -23,7 +24,8 @@ export interface IMonitoredDatabase {
 
 export interface IMonitoredApplication {
     id: number;
-    systemName:string;
+    systemName: string;
+    upDate: string;
     websites: IMonitoredWebsite[];
     databases: IMonitoredDatabase[];
     webservices: IMonitoredWebservice[];

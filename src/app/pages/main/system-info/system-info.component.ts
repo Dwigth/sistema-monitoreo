@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import moment from 'moment';
 import { IMonitoredApplication } from 'src/app/interfaces/core';
 
 @Component({
@@ -8,13 +9,16 @@ import { IMonitoredApplication } from 'src/app/interfaces/core';
 })
 export class SystemInfoComponent implements OnInit {
 
+  timeDiff: string;
+
   constructor() { }
 
-  @Input() MonitoredApplication:IMonitoredApplication;
+  @Input() MonitoredApplication: IMonitoredApplication;
 
   ngOnInit(): void {
     console.log(this.MonitoredApplication);
-    
+    moment.locale('es')
+    this.timeDiff = moment(this.MonitoredApplication.upDate).fromNow();
   }
 
 }

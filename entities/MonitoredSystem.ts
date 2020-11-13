@@ -1,5 +1,5 @@
 
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn, OneToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { MonitoredDatabase } from './MonitoredDatabase';
 import { MonitoredWebService } from './MonitoredWebService';
 import { MonitoredWebsite } from './MonitoredWebsite';
@@ -13,6 +13,9 @@ export class MonitoredSystem {
     @Column()
     systemName: string;
 
+    @Column("datetime", { nullable: true })
+    upDate: Date;
+
     @OneToMany(() => MonitoredWebsite, monitoredWebsites => monitoredWebsites.system)
     websites: MonitoredWebsite[];
 
@@ -20,6 +23,6 @@ export class MonitoredSystem {
     databases: MonitoredDatabase[];
 
     @OneToMany(() => MonitoredWebService, monitoredWebService => monitoredWebService.system)
-    webservices: MonitoredDatabase[];
+    webservices: MonitoredWebService[];
 
 }

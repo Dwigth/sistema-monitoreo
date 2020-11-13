@@ -4,3 +4,18 @@
 .custom-file-control, .form-control, .is-focused .custom-file-control, .is-focused .form-control {
     background-image: linear-gradient(0deg, #862347 2px, rgba(0, 150, 136, 0) 0), linear-gradient(0deg, rgba(0, 0, 0, .26) 1px, transparent 0) !important;
 }
+
+.panel {
+    display:block;
+    height:278px;
+    background-color: #862347;
+}
+
+.freeBird {
+    margin-top:-100px;
+    font-size: 12px;
+}
+
+.jumbotron {
+    border-radius: 0.0rem !important;
+}

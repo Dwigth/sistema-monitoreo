@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import * as express from 'express';
-import { Application } from 'express';
+import { Application, Request, Response } from 'express';
 import { createServer } from 'http';
 import * as socketio from 'socket.io';
 import axios from 'axios';
@@ -11,7 +11,7 @@ import axios from 'axios';
  * 
  * ================================================
  */
-import { createConnection, getRepository } from 'typeorm';
+import { ConnectionManager, createConnection, getRepository } from 'typeorm';
 import { MonitoredSystem, } from './entities/MonitoredSystem';
 import { MonitorConfiguration } from './entities/MonitorConfiguration';
 
@@ -43,19 +43,80 @@ createConnection().then(async connection => {
                 let websites = (system.websites != null) ? await Promise.all(system.websites.map(async website => {
                     // Accediendo a estatuses de las páginas web
                     const response = {
-                        websiteUrl: website.url,
-                        responseStatus: {},
+                        url: website.url,
+                        statusResponseCode: {},
                     }
                     const axiosResponse = await axios.get(website.url).catch(e => e.response);
-                    response.responseStatus = axiosResponse.status
+                    response.statusResponseCode = axiosResponse.status
                     return response;
 
-                })) : null;
+                })) : [];
+
+                let webservices = (system.webservices != null) ? await Promise.all(system.webservices.map(async webservice => {
+                    // Accediendo a estatuses de las páginas web
+                    const response = {
+                        url: webservice.url,
+                        statusResponseCode: {},
+                    }
+                    const axiosResponse = await axios.get(webservice.url, { headers: { token: webservice.token } }).catch(e => e.response);
+                    response.statusResponseCode = axiosResponse.status
+                    return response;
+
+                })) : [];
+
+                let databases = (system.databases != null) ? await Promise.all(system.databases.map(async database => {
+                    // console.log(database);
+                    let isConnected = false;
+                    try {
+                        const connectionManager = new ConnectionManager();
+                        let postgres = {
+                            //@ts-ignore
+                            type: database.type,
+                            host: database.host,
+                            port: database.port,
+                            username: database.username,
+                            password: database.password,
+                            database: database.databaseName,
+                        };
+                        let oracle = {
+                            //@ts-ignore
+                            type: database.type,
+                            host: database.host,
+                            port: database.port,
+                            sid: database.sid,
+                            username: database.username,
+                            password: database.password,
+                            database: database.databaseName,
+                        }
+                        let connection;
+                        if (database.type === 'postgres') {
+                            // @ts-ignore
+                            connection = connectionManager.create(postgres);
+                        } else if (database.type === 'oracle') {
+                            // @ts-ignore
+                            connection = connectionManager.create(oracle);
+                        }
+                        const connectResult = await connection.connect();
+                        isConnected = connectResult.isConnected;
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    const response = {
+                        url: database.host,
+                        statusResponseCode: (isConnected) ? 200 : 500,
+                    }
+                    return response;
+
+                })) : [];
 
                 return {
                     id: system.id,
                     systemName: system.systemName,
-                    websites
+                    upDate: system.upDate,
+                    websites,
+                    webservices,
+                    databases
                 }
             });
 
@@ -64,6 +125,9 @@ createConnection().then(async connection => {
         }, FETCH_INTERVAL);
         console.log('Se ha conectado el cliente.');
     });
+
+    // Servir la aplicacion
+    app.use('/', express.static(__dirname.replace('server', 'monitoreo')));
 
     http.listen(3000, () => {
         console.log('listening on *:3000');

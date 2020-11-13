@@ -12,6 +12,8 @@ export class MonitoredWebService {
 
     @Column()
     name: string;
+    @Column({ nullable: true })
+    token: string;
 
     @Column()
     statusResponseCode: number;

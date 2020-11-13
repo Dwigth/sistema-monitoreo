@@ -4,13 +4,14 @@
     <div class="system-title-name"> {{MonitoredApplication.systemName}}</div>
     <div class="system-divider"></div>
     <div class="system-database" *ngIf="MonitoredApplication.databases != undefined">
-        <div class="status-dot idle"*ngIf="MonitoredApplication.databases.length > 0"></div>
+        <div class="status-dot idle" *ngIf="MonitoredApplication.databases.length > 0"></div>
     </div>
     <div class="system-cloud" *ngIf="MonitoredApplication.websites != undefined">
-        <div class="status-dot idle"*ngIf="MonitoredApplication.websites.length > 0"></div>
+        <div class="status-dot idle" *ngIf="MonitoredApplication.websites.length > 0"></div>
     </div>
     <div class="system-time-response">
         <img src="/assets/img/alerta.png" alt="">
-        15 min: 50 seg
+        <!-- 15 min: 50 seg -->
+        {{timeDiff}}
     </div>
 </div>

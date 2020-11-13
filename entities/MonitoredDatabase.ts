@@ -8,16 +8,31 @@ export class MonitoredDatabase {
     id: number;
 
     @Column()
-    url: string;
+    type: string;
 
     @Column()
     name: string;
 
     @Column()
-    label: string;
+    host: string;
 
     @Column()
     port: number;
+
+    @Column()
+    username: string;
+
+    @Column({ nullable: true })
+    sid: string;
+
+    @Column()
+    password: string;
+
+    @Column()
+    label: string;
+
+    @Column()
+    databaseName: string;
 
     @Column()
     statusResponseCode: number;

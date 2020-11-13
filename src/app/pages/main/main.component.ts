@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IMonitoredApplication } from 'src/app/interfaces/core';
 import { InfoService } from 'src/app/services/info.service';
+import { Systems } from 'src/app/systems';
 
 @Component({
   selector: 'app-main',
@@ -9,13 +10,16 @@ import { InfoService } from 'src/app/services/info.service';
 })
 export class MainComponent implements OnInit {
 
-  systems:IMonitoredApplication[];
+  System: Systems = new Systems();
+  systems: IMonitoredApplication[];
 
   constructor(public infoS: InfoService) { }
 
   ngOnInit(): void {
-    this.infoS.getWebsitesInfo().subscribe((r:{responses:IMonitoredApplication[]}) => {
+    this.systems = this.System.Systems;
+    this.infoS.getWebsitesInfo().subscribe((r: { responses: IMonitoredApplication[] }) => {
       this.systems = r.responses;
+      this.System.newSystems = this.systems;
     });
   }
 

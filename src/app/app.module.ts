@@ -9,8 +9,9 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SystemInfoComponent } from './pages/main/system-info/system-info.component';
 import { ConfigComponent } from './pages/config/config.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: environment.url, options: {} };
 
 @NgModule({
   declarations: [

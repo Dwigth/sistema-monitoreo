@@ -1,9 +1,10 @@
 import { Socket } from 'socket.io';
 import * as express from 'express';
-import { Application, Request, Response } from 'express';
+import { Application } from 'express';
 import { createServer } from 'http';
 import * as socketio from 'socket.io';
 import axios from 'axios';
+import * as cors from 'cors';
 /**
  * ================================================
  * 
@@ -24,14 +25,10 @@ createConnection().then(async connection => {
     const io = socketio(http);
     const FETCH_INTERVAL = config.timeInterval;
 
-    const URLs = [
-        'https://citavehicular.sf.tabasco.gob.mx/',
-        'https://sidie.sf.tabasco.gob.mx/',
-        'http://tcitavehicular.spf.tabasco.local/'
-    ];
+    // Middlewares
+    app.use(cors())
 
     // Conexión de socket.io
-
     io.on('connection', (socket: Socket) => {
 
         setInterval(async () => {
@@ -98,6 +95,7 @@ createConnection().then(async connection => {
                         }
                         const connectResult = await connection.connect();
                         isConnected = connectResult.isConnected;
+                        await connectResult.close();
                     } catch (error) {
                         console.log(error);
                     }
@@ -129,8 +127,8 @@ createConnection().then(async connection => {
     // Servir la aplicacion
     app.use('/', express.static(__dirname.replace('server', 'monitoreo')));
 
-    http.listen(3000, () => {
-        console.log('listening on *:3000');
+    http.listen(3009, () => {
+        console.log('listening on *:3009');
     });
 
 }).catch(error => console.log(error));

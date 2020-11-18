@@ -7,6 +7,7 @@
     "watch-ts": "tsc -w -p tsconfig.server.json",
     "watch-js": "nodemon server/server.js",
     "start-server": "concurrently \"tsc -w -p tsconfig.server.json\" \"nodemon dist/server/server.js\"",
+    "compile-server": "tsc -p tsconfig.server.json",
     "build": "ng build",
     "pbuild": "ng build --prod",
     "test": "ng test",

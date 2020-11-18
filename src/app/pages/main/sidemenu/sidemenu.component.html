@@ -1,0 +1,101 @@
+<div id="mySidenav" class="sidenav bg-white">
+    <a href="javascript:void(0)" class="closebtn" (click)="sidemenu.closeNav()">
+        <span class="material-icons">
+            close
+        </span>
+    </a>
+    <div *ngIf="sidemenu.CURRENT_SYSTEM != undefined" class="ml-5 container">
+        <div>
+            ERROR_LOGS
+            <!-- servicios web -->
+            <table aria-describedby="Servicios web de este sistema" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                        <th>Descripción</th>
+                        <th>Severidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let web of sidemenu.CURRENT_SYSTEM.webservices; let i = index;"
+                        [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.websites.length - 1}">
+                        <td>{{web.name}}</td>
+                        <td><a [href]="web.url">{{web.url | shortenUrl}}</a></td>
+                        <td [ngClass]="{
+                        'idle-font-color':web.statusResponseCode >= 200,
+                        'inconsistency-font-color':web.statusResponseCode >= 400,
+                        'out-of-service-font-color':web.statusResponseCode >= 500
+                    }">{{web.statusResponseCode}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Sitios web -->
+        <table aria-describedby="Páginas web de este sistema" class="styled-table">
+            <thead>
+                <tr>
+                    <th>Sitios web</th>
+                    <th>URL</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let web of sidemenu.CURRENT_SYSTEM.websites; let i = index;"
+                    [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.websites.length - 1}">
+                    <td>{{web.name}}</td>
+                    <td><a [href]="web.url">{{web.url| shortenUrl}}</a></td>
+                    <td [ngClass]="{
+                        'idle-font-color':web.statusResponseCode >= 200,
+                        'inconsistency-font-color':web.statusResponseCode >= 400,
+                        'out-of-service-font-color':web.statusResponseCode >= 500
+                    }">{{web.statusResponseCode}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- servicios web -->
+        <table aria-describedby="Servicios web de este sistema" class="styled-table">
+            <thead>
+                <tr>
+                    <th>Servicios web</th>
+                    <th>URL</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let web of sidemenu.CURRENT_SYSTEM.webservices; let i = index;"
+                    [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.websites.length - 1}">
+                    <td>{{web.name}}</td>
+                    <td><a [href]="web.url">{{web.url | shortenUrl}}</a></td>
+                    <td [ngClass]="{
+                        'idle-font-color':web.statusResponseCode >= 200,
+                        'inconsistency-font-color':web.statusResponseCode >= 400,
+                        'out-of-service-font-color':web.statusResponseCode >= 500
+                    }">{{web.statusResponseCode}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Bases de datos -->
+        <table aria-describedby="Servicios web de este sistema" class="styled-table">
+            <thead>
+                <tr>
+                    <th>BD</th>
+                    <th>URL</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let bd of sidemenu.CURRENT_SYSTEM.databases; let i = index;"
+                    [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.databases.length - 1}">
+                    <td>{{bd.name}}</td>
+                    <td><a [href]="bd.url">{{bd.url }}</a></td>
+                    <td [ngClass]="{
+                        'idle-font-color':bd.statusResponseCode >= 200,
+                        'inconsistency-font-color':bd.statusResponseCode >= 400,
+                        'out-of-service-font-color':bd.statusResponseCode >= 500
+                    }">{{bd.statusResponseCode}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

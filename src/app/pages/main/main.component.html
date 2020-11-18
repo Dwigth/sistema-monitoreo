@@ -1,6 +1,6 @@
+<app-sidemenu></app-sidemenu>
 <div style="margin-top: 5rem; margin-left: 11rem;">
-    
-        
-        <app-system-info *ngFor="let system of systems" [MonitoredApplication]="system"></app-system-info>
-    
+        <app-system-info *ngFor="let system of systems" (click)="sidemenu.openNav(); sidemenu.system=system;"
+                [MonitoredApplication]="system">
+        </app-system-info>
 </div>

@@ -10,6 +10,8 @@ import { SystemInfoComponent } from './pages/main/system-info/system-info.compon
 import { ConfigComponent } from './pages/config/config.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { SidemenuComponent } from './pages/main/sidemenu/sidemenu.component';
+import { ShortenUrlPipe } from './pages/main/sidemenu/shorten-url.pipe';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -19,7 +21,9 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     MainComponent,
     DetailsComponent,
     SystemInfoComponent,
-    ConfigComponent
+    ConfigComponent,
+    SidemenuComponent,
+    ShortenUrlPipe
   ],
   imports: [
     BrowserModule,

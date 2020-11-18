@@ -3,6 +3,12 @@
 // @import './assets/fonts/Futura_Light.ttf';
 // @import './assets/fonts/Futura_Medium_BT.ttf';
 
+* {
+  --idle:#249843;
+  --inconsistency:#ECB32C;
+  --out-of-service:#D42020;
+}
+
 @font-face {
     font-family: 'Futura_Heavy';
     src: url('./assets/fonts/Futura_Heavy.ttf');
@@ -15,9 +21,20 @@
     font-family: 'Futura_Medium_BT';
     src: url('./assets/fonts/Futura_Medium_BT.ttf');
   }
+
 body {
     background-image: url('./assets/img/background.jpg');
     background-position: initial;
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+.idle-font-color {
+  color: var(--idle) !important;
+}
+.inconsistency-font-color {
+color: var(--inconsistency) !important;
+}
+.out-of-service-font-color {
+  color: var(--out-of-service) !important;
 }

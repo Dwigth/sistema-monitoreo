@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IMonitoredApplication } from 'src/app/interfaces/core';
 import { InfoService } from 'src/app/services/info.service';
 import { Systems } from 'src/app/systems';
+import { SidemenuService } from './sidemenu/sidemenu.service';
 
 @Component({
   selector: 'app-main',
@@ -13,7 +14,7 @@ export class MainComponent implements OnInit {
   System: Systems = new Systems();
   systems: IMonitoredApplication[];
 
-  constructor(public infoS: InfoService) { }
+  constructor(public infoS: InfoService, public sidemenu: SidemenuService) { }
 
   ngOnInit(): void {
     this.systems = this.System.Systems;

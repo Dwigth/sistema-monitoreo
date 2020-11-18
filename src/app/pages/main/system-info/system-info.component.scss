@@ -24,25 +24,7 @@
     border-radius: 50%;
 }
 
-.idle {
-    background: #249843 0% 0% no-repeat padding-box !important;
-}
-.inconsistency {
-    background: #ECB32C 0% 0% no-repeat padding-box !important;
-}
-.out-of-service {
-    background: #D42020 0% 0% no-repeat padding-box !important;
-}
 
-.border-idle {
-    border-color: #249843 !important;
-}
-.border-inconsistency {
-    border-color: #ECB32C !important;
-}
-.border-out-of-service {
-    border-color: #D42020 !important;
-}
 .system-title {
     font-family: 'Futura_Medium_BT';
     // letter-spacing: 1px;

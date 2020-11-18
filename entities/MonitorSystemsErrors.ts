@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { MonitoredSystem } from './MonitoredSystem';
+import { MonitoredWebService } from './MonitoredWebService';
 import { MonitorErrorsCatalog } from './MonitorErrorsCatalog';
 
 @Entity()
@@ -11,10 +12,13 @@ export class MonitorSystemsErrors {
     @Column()
     description: string;
 
+    @Column('datetime')
+    timestamp: Date;
+
     @ManyToOne(() => MonitoredSystem, monitoredSystem => monitoredSystem.errors)
     system: MonitoredSystem;
 
-    @ManyToOne(() => MonitoredSystem, monitoredSystem => monitoredSystem.errors)
+    @ManyToOne(() => MonitorErrorsCatalog, MonitorErrorsCatalog => MonitorErrorsCatalog.systemErrors)
     error: MonitorErrorsCatalog;
 
 }

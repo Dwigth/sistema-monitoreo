@@ -12,18 +12,20 @@ import * as cors from 'cors';
  * 
  * ================================================
  */
-import { ConnectionManager, createConnection, getRepository } from 'typeorm';
+import { ConnectionManager, createConnection, getManager, getRepository } from 'typeorm';
 import { MonitoredSystem, } from './entities/MonitoredSystem';
 import { MonitorConfiguration } from './entities/MonitorConfiguration';
+import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
+import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 
 createConnection().then(async connection => {
     const config = await getRepository(MonitorConfiguration).findOne({ where: { activated: 1 } });
-    const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices'] })
+    const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors'] })
 
     const app: Application = express();
     const http = createServer(app);
     const io = socketio(http);
-    const FETCH_INTERVAL = config.timeInterval;
+    const FETCH_INTERVAL = config.timeInterval || 10000;
 
     // Middlewares
     app.use(cors())
@@ -42,10 +44,11 @@ createConnection().then(async connection => {
                     const response = {
                         name: website.name,
                         url: website.url,
-                        statusResponseCode: {},
+                        statusResponseCode: 0,
                     }
                     const axiosResponse = await axios.get(website.url).catch(e => e.response);
-                    response.statusResponseCode = axiosResponse.status
+                    response.statusResponseCode = axiosResponse.status;
+                    await ErrorHandler(system, response.statusResponseCode, website.name);
                     return response;
 
                 })) : [];
@@ -55,10 +58,11 @@ createConnection().then(async connection => {
                     const response = {
                         name: webservice.name,
                         url: webservice.url,
-                        statusResponseCode: {},
+                        statusResponseCode: 0,
                     }
                     const axiosResponse: AxiosResponse = await axios.get(webservice.url, { headers: { token: webservice.token } }).catch(e => e.response);
-                    response.statusResponseCode = axiosResponse.status
+                    response.statusResponseCode = axiosResponse.status;
+                    await ErrorHandler(system, response.statusResponseCode, webservice.name);
                     return response;
 
                 })) : [];
@@ -107,6 +111,7 @@ createConnection().then(async connection => {
                         url: database.host,
                         statusResponseCode: (isConnected) ? 200 : 500,
                     }
+                    await ErrorHandler(system, response.statusResponseCode, database.name);
                     return response;
 
                 })) : [];
@@ -136,3 +141,27 @@ createConnection().then(async connection => {
     });
 
 }).catch(error => console.log(error));
+
+async function ErrorHandler(system: MonitoredSystem, statusCode: number, type: string) {
+    if (statusCode >= 400) {
+
+        const errorCat = await getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
+        if (errorCat) {
+            const latestError = await getRepository(MonitorSystemsErrors).findOne({ where: { system: system, error: errorCat } });
+            if (latestError === undefined) {
+                try {
+                    const systemError = new MonitorSystemsErrors();
+                    systemError.error = errorCat;
+                    systemError.system = system;
+                    systemError.timestamp = new Date();
+                    systemError.description = `${type} ha sufrido un error del tipo: ${errorCat.description}`;
+                    await getManager().save(systemError);
+
+                } catch (error) {
+                    console.log(error);
+
+                }
+            }
+        }
+    }
+}

@@ -3,6 +3,8 @@ import { MonitoredDatabase } from './entities/MonitoredDatabase';
 import { MonitoredSystem } from './entities/MonitoredSystem';
 import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitoredWebsite } from './entities/MonitoredWebsite';
+import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
+import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
 import { getManager } from "typeorm";
 import { createConnection } from 'typeorm';
 //@ts-ignore
@@ -28,6 +30,18 @@ class StartSequence {
                 MonitorConfig.timeInterval = _config.timeInterval;
                 await getManager().save(MonitorConfig);
                 console.log('Insertando configuraciones');
+
+            });
+        }
+
+        // Despues insertamos el catálogo de errores
+        if (config.ErrorsCatalog.length > 0) {
+            Array.from(config.ErrorsCatalog).forEach(async (_errorCatalog: any) => {
+                const monitorErrorsCatalog = new MonitorErrorsCatalog();
+                monitorErrorsCatalog.code = _errorCatalog.code;
+                monitorErrorsCatalog.description = _errorCatalog.description;
+                await getManager().save(monitorErrorsCatalog);
+                console.log('Insertando catalogo de errores');
 
             });
         }
@@ -112,6 +126,15 @@ class StartSequence {
         console.log('Borramos sistemas');
         const systems = await getManager().find(MonitoredSystem);
         systems.forEach(async (mc) => await getManager().remove(mc));
+
+        console.log('Borramos errores')
+
+
+        const systemErrors = await getManager().find(MonitorSystemsErrors);
+        systemErrors.forEach(async (mc) => await getManager().remove(mc));
+
+        const errorCatalog = await getManager().find(MonitorErrorsCatalog);
+        errorCatalog.forEach(async (mc) => await getManager().remove(mc));
     }
 
 }

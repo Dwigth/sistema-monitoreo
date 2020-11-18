@@ -6,26 +6,21 @@
     </a>
     <div *ngIf="sidemenu.CURRENT_SYSTEM != undefined" class="ml-5 container">
         <div>
-            ERROR_LOGS
             <!-- servicios web -->
             <table aria-describedby="Servicios web de este sistema" class="styled-table">
                 <thead>
-                    <tr>
+                    <tr class="error">
                         <th>Error</th>
                         <th>Descripción</th>
-                        <th>Severidad</th>
+                        <!-- <th>Severidad</th> -->
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let web of sidemenu.CURRENT_SYSTEM.webservices; let i = index;"
-                        [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.websites.length - 1}">
-                        <td>{{web.name}}</td>
-                        <td><a [href]="web.url">{{web.url | shortenUrl}}</a></td>
-                        <td [ngClass]="{
-                        'idle-font-color':web.statusResponseCode >= 200,
-                        'inconsistency-font-color':web.statusResponseCode >= 400,
-                        'out-of-service-font-color':web.statusResponseCode >= 500
-                    }">{{web.statusResponseCode}}</td>
+                <tbody class="error-body">
+                    <tr *ngFor="let error of sidemenu.CURRENT_SYSTEM.errors; let i = index;"
+                        [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.errors.length - 1}">
+                        <td>*</td>
+                        <td><a>{{error.description}}</a></td>
+                        <!-- <td>{{error.statusResponseCode}}</td> -->
                     </tr>
                 </tbody>
             </table>

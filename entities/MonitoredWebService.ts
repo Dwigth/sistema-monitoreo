@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn, OneToOne, OneToMany } from "typeorm";
 import { MonitoredSystem } from './MonitoredSystem';
+import { MonitorSystemsErrors } from './MonitorSystemsErrors';
 
 @Entity()
 export class MonitoredWebService {

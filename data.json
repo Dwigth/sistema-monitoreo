@@ -154,5 +154,231 @@
             "label": "Cada minuto",
             "activated": true
         }
+    ],
+    "ErrorsCatalog": [
+        {
+            "code": 200,
+            "description": "OK"
+        },
+        {
+            "code": 201,
+            "description": "Created"
+        },
+        {
+            "code": 202,
+            "description": "Accepted"
+        },
+        {
+            "code": 203,
+            "description": "Non-Au­tho­rit­ative Inform­ation 1.1"
+        },
+        {
+            "code": 204,
+            "description": "No Content"
+        },
+        {
+            "code": 205,
+            "description": "Reset Content"
+        },
+        {
+            "code": 206,
+            "description": "Partial Content"
+        },
+        {
+            "code": 207,
+            "description": "Multi-­Status WebDAV 4918"
+        },
+        {
+            "code": 208,
+            "description": "Already Reported WebDAV 5842"
+        },
+        {
+            "code": 226,
+            "description": "IM Used 3229 GET"
+        },
+        {
+            "code": 400,
+            "description": "Bad Request"
+        },
+        {
+            "code": 401,
+            "description": "Unauth­orized"
+        },
+        {
+            "code": 402,
+            "description": "Payment Required res"
+        },
+        {
+            "code": 403,
+            "description": "Forbidden"
+        },
+        {
+            "code": 404,
+            "description": "Not Found"
+        },
+        {
+            "code": 405,
+            "description": "Method Not Allowed"
+        },
+        {
+            "code": 406,
+            "description": "Not Acceptable"
+        },
+        {
+            "code": 407,
+            "description": "Proxy Authen­tic­ation Required"
+        },
+        {
+            "code": 408,
+            "description": "Request Timeout"
+        },
+        {
+            "code": 409,
+            "description": "Conflict"
+        },
+        {
+            "code": 410,
+            "description": "Gone"
+        },
+        {
+            "code": 411,
+            "description": "Length Required"
+        },
+        {
+            "code": 412,
+            "description": "Precon­dition Failed"
+        },
+        {
+            "code": 413,
+            "description": "Request Entity Too Large"
+        },
+        {
+            "code": 414,
+            "description": "Reques­t-URI Too Long"
+        },
+        {
+            "code": 415,
+            "description": "Unsupp­orted Media Type"
+        },
+        {
+            "code": 416,
+            "description": "Requested Range Not Satisf­iable"
+        },
+        {
+            "code": 417,
+            "description": "Expect­ation Failed"
+        },
+        {
+            "code": 418,
+            "description": "I'm a teapot 2324"
+        },
+        {
+            "code": 422,
+            "description": "Unproc­essable Entity WebDAV 4918"
+        },
+        {
+            "code": 423,
+            "description": "Locked WebDAV 4918"
+        },
+        {
+            "code": 424,
+            "description": "Failed Dependency WebDAV 4918"
+        },
+        {
+            "code": 425,
+            "description": "Unordered Collection 3648"
+        },
+        {
+            "code": 426,
+            "description": "Upgrade Required 2817"
+        },
+        {
+            "code": 428,
+            "description": "Precon­dition Required draft"
+        },
+        {
+            "code": 429,
+            "description": "Too Many Requests draft"
+        },
+        {
+            "code": 431,
+            "description": "Request Header Fields Too Large draft"
+        },
+        {
+            "code": 444,
+            "description": "No Response nginx"
+        },
+        {
+            "code": 449,
+            "description": "Retry With MS"
+        },
+        {
+            "code": 450,
+            "description": "Blocked By Windows Parental Controls MS"
+        },
+        {
+            "code": 451,
+            "description": "Unavai­lable For Legal Reasons draft"
+        },
+        {
+            "code": 499,
+            "description": "Client Closed Request nginx"
+        },
+        {
+            "code": 500,
+            "description": "Internal Server Error"
+        },
+        {
+            "code": 501,
+            "description": "Not Implem­ented"
+        },
+        {
+            "code": 502,
+            "description": "Bad Gateway"
+        },
+        {
+            "code": 503,
+            "description": "Service Unavai­lable"
+        },
+        {
+            "code": 504,
+            "description": "Gateway Timeout"
+        },
+        {
+            "code": 505,
+            "description": "HTTP Version Not Supported"
+        },
+        {
+            "code": 506,
+            "description": "Variant Also Negotiates 2295"
+        },
+        {
+            "code": 507,
+            "description": "Insuff­icient Storage WebDAV 4918"
+        },
+        {
+            "code": 508,
+            "description": "Loop Detected WebDAV 5842"
+        },
+        {
+            "code": 509,
+            "description": "Bandwidth Limit Exceeded nostd"
+        },
+        {
+            "code": 510,
+            "description": "Not Extended 2774"
+        },
+        {
+            "code": 511,
+            "description": "Network Authen­tic­ation Required draft"
+        },
+        {
+            "code": 598,
+            "description": "Network read timeout error nostd"
+        },
+        {
+            "code": 599,
+            "description": "Network connect timeout error nostd"
+        }
     ]
 }

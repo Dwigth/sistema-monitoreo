@@ -72,6 +72,21 @@
   color: #ffffff;
   text-align: left;
 }
+
+.styled-table thead .error {
+  background-color: var(--out-of-service);
+  color: #ffffff;
+  text-align: left;
+}
+
+.styled-table .error-body tr:last-of-type {
+  border-bottom: 2px solid var(--out-of-service);
+}
+.styled-table .error-body tr.active-row {
+  font-weight: bold;
+  color: var(--out-of-service);
+}
+
 .styled-table th,
 .styled-table td {
     padding: 12px 15px;

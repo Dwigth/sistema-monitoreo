@@ -1,0 +1,158 @@
+{
+    "Systems": [
+        {
+            "systemName": "Citas",
+            "websites": [
+                {
+                    "url": "https://citavehicular.sf.tabasco.gob.mx/",
+                    "name": "Citas Vehiculares",
+                    "statusResponseCode": 0
+                }
+            ],
+            "webservices": [
+                {
+                    "url": "https://citavehicular.sf.tabasco.gob.mx/home",
+                    "name": "/home",
+                    "token": "7aa99682f9d3a129f54e0eae9ccd3628",
+                    "responseType": "json",
+                    "property": "error",
+                    "propertyDataType": "boolean",
+                    "isOkValue": "true",
+                    "isDownValue": "false",
+                    "statusResponseCode": 0
+                }
+            ],
+            "databases": [
+                {
+                    "type": "postgres",
+                    "name": "Citas DB",
+                    "host": "10.14.1.205",
+                    "port": 5432,
+                    "username": "postgres",
+                    "sid": "",
+                    "password": "",
+                    "label": "Base de datos postgres para el sistema de Citas Vehiculares",
+                    "databaseName": "citas",
+                    "statusResponseCode": 0
+                }
+            ]
+        },
+        {
+            "systemName": "SiDIE",
+            "websites": [
+                {
+                    "url": "https://sidie.sf.tabasco.gob.mx/",
+                    "name": "SiDIE",
+                    "statusResponseCode": 0
+                }
+            ],
+            "webservices": [
+                {
+                    "url": "https://sidie.sf.tabasco.gob.mx/api/v1/agenda/home",
+                    "name": "Servicio Web de la agenda institucional",
+                    "token": "",
+                    "statusResponseCode": 0,
+                    "responseType": "json",
+                    "property": "error",
+                    "propertyDataType": "boolean",
+                    "isOkValue": "true",
+                    "isDownValue": "false"
+                },
+                {
+                    "url": "https://sidie.sf.tabasco.gob.mx/api/v1/general/home",
+                    "name": "Servicio Web de servicios general de SiDIE",
+                    "token": "",
+                    "statusResponseCode": 0,
+                    "responseType": "json",
+                    "property": "error",
+                    "propertyDataType": "boolean",
+                    "isOkValue": "true",
+                    "isDownValue": "false"
+                }
+            ],
+            "databases": [
+                {
+                    "type": "postgres",
+                    "name": "SiDIE PRO",
+                    "host": "10.14.1.205",
+                    "port": 5432,
+                    "username": "postgres",
+                    "sid": "",
+                    "password": "",
+                    "label": "SiDIE",
+                    "databaseName": "SIDIE",
+                    "statusResponseCode": 0
+                }
+            ]
+        },
+        {
+            "systemName": "SICARET",
+            "websites": [
+                {
+                    "url": "https://sicaret20.spf.tabasco.gob.mx/",
+                    "name": "Sitio Web Sicaret 2.0",
+                    "statusResponseCode": 0
+                }
+            ],
+            "webservices": [
+                {
+                    "url": "https://sicaret20.spf.tabasco.gob.mx/rest/checkNOVO.php",
+                    "name": "SICARET PREDIAL",
+                    "token": "",
+                    "statusResponseCode": 0,
+                    "responseType": "json",
+                    "property": "data",
+                    "propertyDataType": "boolean",
+                    "isOkValue": "true",
+                    "isDownValue": "false"
+                },
+                {
+                    "url": "https://sicaret20.spf.tabasco.gob.mx/rest/checkSICARET.php",
+                    "name": "SICARET AGUA",
+                    "token": "",
+                    "statusResponseCode": 0,
+                    "responseType": "json",
+                    "property": "data",
+                    "propertyDataType": "boolean",
+                    "isOkValue": "true",
+                    "isDownValue": "false"
+                },
+                {
+                    "url": "https://sicaret20.spf.tabasco.gob.mx/sicaret_informes2018/",
+                    "name": "SICARET INFORMES",
+                    "token": "",
+                    "statusResponseCode": 0,
+                    "responseType": "string",
+                    "property": "",
+                    "propertyDataType": "string",
+                    "isOkValue": "Reporte",
+                    "isDownValue": ""
+                },
+                {
+                    "url": "http://recaudanet.spf.tabasco.gob.mx:9090/CFDIGET/ProcesoFacturaDigital?wsdl",
+                    "name": "SICARET INFORMACION SAT",
+                    "token": "",
+                    "statusResponseCode": 0,
+                    "responseType": "xml",
+                    "property": "",
+                    "propertyDataType": "string",
+                    "isOkValue": "Reporte",
+                    "isDownValue": ""
+                }
+            ],
+            "databases": []
+        }
+    ],
+    "MonitorConfiguration": [
+        {
+            "timeInterval": 10000,
+            "label": "Cada 10 segundos",
+            "activated": false
+        },
+        {
+            "timeInterval": 60000,
+            "label": "Cada minuto",
+            "activated": true
+        }
+    ]
+}

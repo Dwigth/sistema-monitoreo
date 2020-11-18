@@ -5,15 +5,18 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
     "module": "commonjs",
     "types": [
       "node"
     ]
   },
   "files": [
-    "server.ts"
+    "server.ts",
+    "init.ts",
   ],
   "include": [
-    "entities/*.ts"
+    "entities/*.ts",
+    "data.json"
   ]
 }

@@ -18,6 +18,17 @@ export class MonitoredWebService {
     @Column()
     statusResponseCode: number;
 
+    @Column()
+    responseType: string;
+    @Column()
+    property: string;
+    @Column()
+    propertyDataType: string;
+    @Column()
+    isOkValue: string;
+    @Column()
+    isDownValue: string;
+
     @ManyToOne(() => MonitoredSystem, monitoredSystem => monitoredSystem.webservices)
     system: MonitoredSystem;
 

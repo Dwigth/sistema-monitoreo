@@ -3,7 +3,7 @@ import * as express from 'express';
 import { Application } from 'express';
 import { createServer } from 'http';
 import * as socketio from 'socket.io';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as cors from 'cors';
 /**
  * ================================================
@@ -17,7 +17,7 @@ import { MonitoredSystem, } from './entities/MonitoredSystem';
 import { MonitorConfiguration } from './entities/MonitorConfiguration';
 
 createConnection().then(async connection => {
-    const config = await getRepository(MonitorConfiguration).findOne({ where: { activated: 'true' } });
+    const config = await getRepository(MonitorConfiguration).findOne({ where: { activated: 1 } });
     const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices'] })
 
     const app: Application = express();
@@ -40,6 +40,7 @@ createConnection().then(async connection => {
                 let websites = (system.websites != null) ? await Promise.all(system.websites.map(async website => {
                     // Accediendo a estatuses de las páginas web
                     const response = {
+                        name: website.name,
                         url: website.url,
                         statusResponseCode: {},
                     }
@@ -52,10 +53,11 @@ createConnection().then(async connection => {
                 let webservices = (system.webservices != null) ? await Promise.all(system.webservices.map(async webservice => {
                     // Accediendo a estatuses de las páginas web
                     const response = {
+                        name: webservice.name,
                         url: webservice.url,
                         statusResponseCode: {},
                     }
-                    const axiosResponse = await axios.get(webservice.url, { headers: { token: webservice.token } }).catch(e => e.response);
+                    const axiosResponse: AxiosResponse = await axios.get(webservice.url, { headers: { token: webservice.token } }).catch(e => e.response);
                     response.statusResponseCode = axiosResponse.status
                     return response;
 
@@ -101,6 +103,7 @@ createConnection().then(async connection => {
                     }
 
                     const response = {
+                        name: database.name,
                         url: database.host,
                         statusResponseCode: (isConnected) ? 200 : 500,
                     }
@@ -114,7 +117,8 @@ createConnection().then(async connection => {
                     upDate: system.upDate,
                     websites,
                     webservices,
-                    databases
+                    databases,
+                    errors: system.errors
                 }
             });
 

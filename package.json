@@ -32,6 +32,7 @@
     "express": "^4.17.1",
     "moment": "^2.29.1",
     "ngx-socket-io": "^3.2.0",
+    "object-grep": "^1.1.2",
     "oracledb": "^5.0.0",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
@@ -40,6 +41,7 @@
     "sqlite3": "^5.0.0",
     "tslib": "^1.10.0",
     "typeorm": "^0.2.29",
+    "xml-js": "^1.6.11",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

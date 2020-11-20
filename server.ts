@@ -5,6 +5,8 @@ import { createServer } from 'http';
 import * as socketio from 'socket.io';
 import axios, { AxiosResponse } from 'axios';
 import * as cors from 'cors';
+import * as xml from 'xml-js';
+const objgrep = require('object-grep');
 /**
  * ================================================
  * 
@@ -17,6 +19,7 @@ import { MonitoredSystem, } from './entities/MonitoredSystem';
 import { MonitorConfiguration } from './entities/MonitorConfiguration';
 import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
 import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
+import { MonitoredWebService } from './entities/MonitoredWebService';
 
 createConnection().then(async connection => {
     const config = await getRepository(MonitorConfiguration).findOne({ where: { activated: 1 } });
@@ -55,6 +58,7 @@ createConnection().then(async connection => {
 
                 let webservices = (system.webservices != null) ? await Promise.all(system.webservices.map(async webservice => {
                     // Accediendo a estatuses de las páginas web
+                    webservice.system = system;
                     const response = {
                         name: webservice.name,
                         url: webservice.url,
@@ -62,6 +66,11 @@ createConnection().then(async connection => {
                     }
                     const axiosResponse: AxiosResponse = await axios.get(webservice.url, { headers: { token: webservice.token } }).catch(e => e.response);
                     response.statusResponseCode = axiosResponse.status;
+                    try {
+                        await AnalizingWebServiceContent(webservice, axiosResponse.data);
+                    } catch (error) {
+                        console.log(error);
+                    }
                     await ErrorHandler(system, response.statusResponseCode, webservice.name);
                     return response;
 
@@ -142,8 +151,12 @@ createConnection().then(async connection => {
 
 }).catch(error => console.log(error));
 
-async function ErrorHandler(system: MonitoredSystem, statusCode: number, type: string) {
-    if (statusCode >= 400) {
+// Error Handling, etc...
+
+const ErrorMsg = (name, description) => `${name} ha sufrido un error del tipo: ${description}`;
+
+async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: string, msg?: string) {
+    if (statusCode >= 201) {
 
         const errorCat = await getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
         if (errorCat) {
@@ -154,7 +167,7 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type: s
                     systemError.error = errorCat;
                     systemError.system = system;
                     systemError.timestamp = new Date();
-                    systemError.description = `${type} ha sufrido un error del tipo: ${errorCat.description}`;
+                    systemError.description = (msg != undefined) ? msg : ErrorMsg(type, errorCat.description);
                     await getManager().save(systemError);
 
                 } catch (error) {
@@ -163,5 +176,57 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type: s
                 }
             }
         }
+    }
+}
+/**
+ * 
+ */
+async function AnalizingWebServiceContent(ws: MonitoredWebService, response: string) {
+    let type = '';
+    switch (ws.responseType) {
+        case 'string':
+            response = response.trim();
+            if (response.indexOf(ws.isOkValue) < 0 || response === '') {
+                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`);
+                console.log('Ha ocurrido un error con ', ws.name);
+                return;
+            }
+            // console.log('Todo está bien.');
+            break;
+        case 'json':
+            response = JSON.parse(JSON.stringify(response));
+            const val = response[ws.property];
+            let expectedValue = '';
+            if (['number', 'boolean'].includes(ws.propertyDataType)) {
+                expectedValue = JSON.parse(ws.isOkValue);
+            } else {
+                // Es un string
+                expectedValue = ws.isOkValue;
+            }
+            // console.log(val, expectedValue);
+
+            // console.log(response, ws.property, typeof val, typeof JSON.parse(ws.isOkValue));
+            if (val !== expectedValue || val === '') {
+                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`);
+                console.log('Ha ocurrido un error con ' + ws.name, `Valor recibido: ${val}, Valor esperado: ${expectedValue}`);
+                return;
+            }
+            // console.log('Todo está bien');
+            break;
+        case 'xml':
+            const result = xml.xml2js(response, { compact: true });
+            try {
+                let r = objgrep.objectGrep(result, ws.isOkValue);
+                if (r === {}) {
+                    ErrorHandler(ws.system, 204, ws.name)
+                    console.log('Ha ocurrido un error con ' + ws.name);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+            break;
+        default:
+            break;
     }
 }

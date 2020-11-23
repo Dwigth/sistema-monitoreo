@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { IMonitoredApplication } from 'src/app/interfaces/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SidemenuService {
 
-  CURRENT_SYSTEM;
+  CURRENT_SYSTEM: IMonitoredApplication;
 
   constructor() { }
 

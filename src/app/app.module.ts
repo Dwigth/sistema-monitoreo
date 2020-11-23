@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { SidemenuComponent } from './pages/main/sidemenu/sidemenu.component';
 import { ShortenUrlPipe } from './pages/main/sidemenu/shorten-url.pipe';
+import { SnackbarModule } from 'ngx-snackbar';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -30,7 +32,9 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule.forRoot(config)
+    HttpClientModule,
+    SocketIoModule.forRoot(config),
+    SnackbarModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

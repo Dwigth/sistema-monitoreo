@@ -3,7 +3,7 @@
     // left: 185px;
     position: relative;
     width: 475px;
-    height: 282px;
+    height: 300px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
     border: 5px solid;
     border-left: 30px solid;
@@ -14,7 +14,7 @@
 }
 .system-info-card:hover {
     width: 490px;
-    height: 292px;
+    height: 310px;
     cursor: pointer;
     transition-duration: 0.5s;
     // transition-duration: 60ms;
@@ -80,14 +80,16 @@
 }
 
 .system-time-response {
-    font-family: 'Futura_Medium_BT';
+    font-family: "Futura_Medium_BT";
     color: #434343;
     font-size: smaller;
     font-weight: 400;
     position: absolute;
     bottom: 10px;
-    width: 200px;
-    height: 20px;
+    width: 400px;
+    height: 50px;
+    margin-left: 10px;
+    margin-bottom: 0px;
 }
 
 .system-time-response img {

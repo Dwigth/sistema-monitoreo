@@ -17,8 +17,8 @@
                     "responseType": "json",
                     "property": "error",
                     "propertyDataType": "boolean",
-                    "isOkValue": "true",
-                    "isDownValue": "false",
+                    "isOkValue": "false",
+                    "isDownValue": "true",
                     "statusResponseCode": 0
                 }
             ],
@@ -55,8 +55,8 @@
                     "responseType": "json",
                     "property": "error",
                     "propertyDataType": "boolean",
-                    "isOkValue": "true",
-                    "isDownValue": "false"
+                    "isOkValue": "false",
+                    "isDownValue": "true"
                 },
                 {
                     "url": "https://sidie.sf.tabasco.gob.mx/api/v1/general/home",
@@ -64,10 +64,10 @@
                     "token": "",
                     "statusResponseCode": 0,
                     "responseType": "json",
-                    "property": "error",
-                    "propertyDataType": "boolean",
-                    "isOkValue": "true",
-                    "isDownValue": "false"
+                    "property": "mensaje",
+                    "propertyDataType": "string",
+                    "isOkValue": "SIDIE.GENERAL esta funcionando correctamente",
+                    "isDownValue": ""
                 }
             ],
             "databases": [

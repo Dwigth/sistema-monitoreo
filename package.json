@@ -33,6 +33,7 @@
     "express": "^4.17.1",
     "moment": "^2.29.1",
     "monitor": "^0.6.10",
+    "ngx-snackbar": "^2.0.1",
     "ngx-socket-io": "^3.2.0",
     "object-grep": "^1.1.2",
     "oracledb": "^5.0.0",

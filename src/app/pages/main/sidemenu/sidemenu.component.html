@@ -12,15 +12,17 @@
                     <tr class="error">
                         <th>Error</th>
                         <th>Descripción</th>
-                        <!-- <th>Severidad</th> -->
+                        <th>Timestamp</th>
                     </tr>
                 </thead>
                 <tbody class="error-body">
                     <tr *ngFor="let error of sidemenu.CURRENT_SYSTEM.errors; let i = index;"
                         [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.errors.length - 1}">
-                        <td>*</td>
+                        <td><button (click)="ResolveIssue(error.id)" type="button"
+                                class="btn btn-primary">Resuelto</button>
+                        </td>
                         <td><a>{{error.description}}</a></td>
-                        <!-- <td>{{error.statusResponseCode}}</td> -->
+                        <td>{{error.timestamp | date:'yyyy/MM/dd, hh:mm aaa'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -83,7 +85,7 @@
                 <tr *ngFor="let bd of sidemenu.CURRENT_SYSTEM.databases; let i = index;"
                     [ngClass]="{'active-row': i === sidemenu.CURRENT_SYSTEM.databases.length - 1}">
                     <td>{{bd.name}}</td>
-                    <td><a [href]="bd.url">{{bd.url }}</a></td>
+                    <td><a [href]="bd.url">{{bd.url | shortenUrl}}</a></td>
                     <td [ngClass]="{
                         'idle-font-color':bd.statusResponseCode >= 200,
                         'inconsistency-font-color':bd.statusResponseCode >= 400,

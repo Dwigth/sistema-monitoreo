@@ -11,6 +11,11 @@ export interface IMonitoredWebservice {
     name: string;
     token?: string;
     statusResponseCode: number;
+    responseType: string;
+    property: string;
+    propertyDataType: string;
+    isOkValue: string;
+    isDownValue: string;
 }
 
 export interface IMonitoredDatabase {
@@ -29,6 +34,15 @@ export interface IMonitoredApplication {
     websites: IMonitoredWebsite[];
     databases: IMonitoredDatabase[];
     webservices: IMonitoredWebservice[];
+    errors: IMonitoredSystemsErrors[]
+}
+
+export interface IMonitoredSystemsErrors {
+    id: number;
+    description: string;
+    timestamp: string | Date;
+    systemId: number;
+    errorId: number;
 }
 
 export interface IMonitorConfiguration {

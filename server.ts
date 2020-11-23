@@ -7,6 +7,7 @@ import * as socketio from 'socket.io';
 import axios, { AxiosResponse } from 'axios';
 import * as cors from 'cors';
 import * as xml from 'xml-js';
+import * as moment from 'moment';
 const objgrep = require('object-grep');
 /**
  * ================================================
@@ -139,6 +140,17 @@ createConnection().then(async connection => {
 
             })) : [];
 
+            // Separar los servicios que sirven para verificar las bases de datos
+            let wsToDelete = [];
+            webservices.forEach((ws, i) => {
+                if (ws.name.indexOf(':DB') >= 0) {
+                    databases.push(ws);
+                    wsToDelete.push(ws)
+                }
+            })
+
+            webservices = webservices.filter(ws => !wsToDelete.includes(ws))
+
             return {
                 id: system.id,
                 systemName: system.systemName,
@@ -151,18 +163,34 @@ createConnection().then(async connection => {
         });
 
         _SYSTEMS = await Promise.all(systemPromises).then(data => data.map(urlResponse => urlResponse)).catch(error => error)
-        io.emit('websites-info', { responses: _SYSTEMS })
+        io.emit('websites-info', { responses: _SYSTEMS, lastUpdate: `Última actualización: ${moment().utc(true).format('YYYY-MM-DD HH:mm:ss')}` })
 
     }, FETCH_INTERVAL);
 
     // Conexión de socket.io
     io.on('connection', (socket: Socket) => {
-        socket.emit('websites-info', { responses: _SYSTEMS })
+        socket.emit('websites-info', { responses: _SYSTEMS, lastUpdate: `Última actualización: ${moment().utc(true).format('YYYY-MM-DD HH:mm:ss')}` })
         console.log('Se ha conectado el cliente.');
     });
 
     // Servir la aplicacion
     app.use('/', express.static(__dirname.replace('server', 'monitoreo')));
+
+    // Rutas 
+    app.delete('/resolve/issue/:id', async (req, res) => {
+        const id = req.params.id;
+        const error = await getRepository(MonitorSystemsErrors).findOne({ where: { id: id } });
+        if (error) {
+            const deleted = await getRepository(MonitorSystemsErrors).remove(error);
+            if (deleted) {
+                res.json({ error: false, msg: `Se ha resuelto el error ${error.description}` })
+            } else {
+                res.json({ error: true, msg: 'Ocurrió un error durante la ejecución.', info: deleted })
+            }
+        } else {
+            res.json({ error: true, msg: 'No se encontró el error del sistema.' })
+        }
+    });
 
     http.listen(3009, () => {
         console.log('listening on *:3009');
@@ -175,6 +203,7 @@ createConnection().then(async connection => {
 // Error Handling, etc...
 
 const ErrorMsg = (name, description) => `${name} ha sufrido un error del tipo: ${description}`;
+const WebServiceErrorMsg = (wsname, val, expectedValue) => 'Ha ocurrido un error con ' + wsname + `. Valor recibido: ${val}, Valor esperado: ${expectedValue}`;
 
 async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: string, msg?: string) {
     if (statusCode >= 201) {
@@ -208,7 +237,7 @@ async function AnalizingWebServiceContent(ws: MonitoredWebService, response: str
         case 'string':
             response = response.trim();
             if (response.indexOf(ws.isOkValue) < 0 || response === '') {
-                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`);
+                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`, WebServiceErrorMsg(ws.name, response, ws.isOkValue));
                 console.log('Ha ocurrido un error con ', ws.name);
                 return;
             }
@@ -228,7 +257,7 @@ async function AnalizingWebServiceContent(ws: MonitoredWebService, response: str
 
             // console.log(response, ws.property, typeof val, typeof JSON.parse(ws.isOkValue));
             if (val !== expectedValue || val === '') {
-                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`);
+                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`, WebServiceErrorMsg(ws.name, val, ws.isOkValue));
                 console.log('Ha ocurrido un error con ' + ws.name, `Valor recibido: ${val}, Valor esperado: ${expectedValue}`);
                 return;
             }
@@ -239,7 +268,7 @@ async function AnalizingWebServiceContent(ws: MonitoredWebService, response: str
             try {
                 let r = objgrep.objectGrep(result, ws.isOkValue);
                 if (r === {}) {
-                    ErrorHandler(ws.system, 204, ws.name)
+                    ErrorHandler(ws.system, 204, ws.name, WebServiceErrorMsg(ws.name, response, ws.isOkValue))
                     console.log('Ha ocurrido un error con ' + ws.name);
                 }
             } catch (error) {

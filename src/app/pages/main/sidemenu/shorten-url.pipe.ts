@@ -6,7 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ShortenUrlPipe implements PipeTransform {
 
   transform(value: string, ...args: unknown[]): unknown {
-    return `${value.slice(0, 15)}...`;
+    const length = +args[0] || 15;
+    return `${value.slice(0, length)}...`;
   }
 
 }

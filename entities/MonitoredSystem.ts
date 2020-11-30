@@ -1,5 +1,6 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { MonitorAlarmPeople } from './MonitorAlarmPeople';
 import { MonitoredDatabase } from './MonitoredDatabase';
 import { MonitoredWebService } from './MonitoredWebService';
 import { MonitoredWebsite } from './MonitoredWebsite';
@@ -28,5 +29,8 @@ export class MonitoredSystem {
 
     @OneToMany(() => MonitorSystemsErrors, monitoredErrorsSystems => monitoredErrorsSystems.system)
     errors: MonitorSystemsErrors[];
+
+    @OneToMany(() => MonitorAlarmPeople, monitorAlarmPeople => monitorAlarmPeople.system)
+    alarmPeople: MonitorAlarmPeople[];
 
 }

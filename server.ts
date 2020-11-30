@@ -1,4 +1,21 @@
+/**
+ * ================================================
+ * 
+ *  Pre-inicio
+ * 
+ * ================================================
+ */
 const dash = require('appmetrics-dash');
+require('dotenv').config()
+
+/**
+ * ================================================
+ * 
+ *  Importaciones globales
+ * 
+ * ================================================
+ */
+
 import { Socket } from 'socket.io';
 import * as express from 'express';
 import { Application } from 'express';
@@ -8,7 +25,9 @@ import axios, { AxiosResponse } from 'axios';
 import * as cors from 'cors';
 import * as xml from 'xml-js';
 import * as moment from 'moment';
+import { AlertMail } from './email';
 const objgrep = require('object-grep');
+
 /**
  * ================================================
  * 
@@ -22,6 +41,7 @@ import { MonitorConfiguration } from './entities/MonitorConfiguration';
 import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
 import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 import { MonitoredWebService } from './entities/MonitoredWebService';
+import { MonitorSystemsErrorsHistory } from './entities/MonitoredSystemsErrorsHistory';
 
 /**
  * ================================================
@@ -150,8 +170,7 @@ createConnection().then(async connection => {
             })
 
             webservices = webservices.filter(ws => !wsToDelete.includes(ws))
-
-            return {
+            const response = {
                 id: system.id,
                 systemName: system.systemName,
                 upDate: system.upDate,
@@ -159,7 +178,8 @@ createConnection().then(async connection => {
                 webservices,
                 databases,
                 errors: system.errors
-            }
+            };
+            return response;
         });
 
         _SYSTEMS = await Promise.all(systemPromises).then(data => data.map(urlResponse => urlResponse)).catch(error => error)
@@ -214,12 +234,22 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: 
             if (latestError === undefined) {
                 try {
                     const systemError = new MonitorSystemsErrors();
+                    let SystemErrorHistory = new MonitorSystemsErrorsHistory();
+
                     systemError.error = errorCat;
                     systemError.system = system;
                     systemError.timestamp = new Date();
                     systemError.description = (msg != undefined) ? msg : ErrorMsg(type, errorCat.description);
-                    await getManager().save(systemError);
 
+                    SystemErrorHistory.error = errorCat;
+                    SystemErrorHistory.system = system;
+                    SystemErrorHistory.timestamp = new Date();
+                    SystemErrorHistory.description = (msg != undefined) ? msg : ErrorMsg(type, errorCat.description);
+                    await getManager().save(systemError);
+                    await getManager().save(SystemErrorHistory);
+                    const alertEmail = new AlertMail();
+                    alertEmail.CurrentSystem = system;
+                    await alertEmail.SendEmail();
                 } catch (error) {
                     console.log(error);
 

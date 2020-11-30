@@ -1,17 +1,22 @@
-<div *ngIf="MonitoredApplication != undefined" class="system-info-card border-idle">
-    <div class="status-dot idle"></div>
+<div *ngIf="MonitoredApplication != undefined" [id]="'card-'+MonitoredApplication.id"
+    class="system-info-card border-idle">
+    <div [id]="'card-dot-'+MonitoredApplication.id" class="status-dot idle"></div>
     <div class="system-title"> SISTEMA DE</div>
     <div class="system-title-name"> {{MonitoredApplication.systemName}}</div>
     <div class="system-divider"></div>
-    <div class="system-database" *ngIf="MonitoredApplication.databases != undefined">
-        <div class="status-dot idle" *ngIf="MonitoredApplication.databases.length > 0"></div>
+    <div [id]="MonitoredApplication.id+'-db'" class="system-database"
+        *ngIf="MonitoredApplication.databases != undefined">
+        <div [id]="'db-dot-'+MonitoredApplication.id" class="status-dot idle"
+            *ngIf="MonitoredApplication.databases.length > 0"></div>
     </div>
-    <div class="system-cloud" *ngIf="MonitoredApplication.websites != undefined">
-        <div class="status-dot idle" *ngIf="MonitoredApplication.websites.length > 0"></div>
+    <div [id]="MonitoredApplication.id+'-cloud'" class="system-cloud"
+        *ngIf="MonitoredApplication.websites != undefined">
+        <div [id]="'ws-dot-'+MonitoredApplication.id" class="status-dot idle"
+            *ngIf="MonitoredApplication.websites.length > 0"></div>
     </div>
-    <div class="system-time-response">
+    <div *ngIf="MonitoredApplication.errors.length > 0" class="system-time-response">
         <img src="/assets/img/alerta.png" alt="">
         <!-- 15 min: 50 seg -->
-        {{timeDiff}}
+        {{MonitoredApplication.errors[0].timestamp | date:'yyyy/MM/dd, hh:mm aaa'}} | <a href="#">Ver detalles</a>
     </div>
 </div>

@@ -254,7 +254,17 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: 
                     console.log(error);
 
                 }
+            } else {
+                console.log('El error persiste');
             }
+        }
+    } else {
+        console.log('[Verificando si hay errores en este sistema]', moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
+        const lastErrors = await getRepository(MonitorSystemsErrors).find({ where: { system: system } });
+        if (lastErrors.length > 0) {
+            console.log('Se encontraron errores en este sistema... Procediendo a eliminarlos.', moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
+            console.log(lastErrors);
+            lastErrors.forEach(error => getRepository(MonitorSystemsErrors).remove(error));
         }
     }
 }

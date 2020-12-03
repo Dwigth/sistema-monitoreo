@@ -97,7 +97,7 @@
             "webservices": [
                 {
                     "url": "https://sicaret20.spf.tabasco.gob.mx/rest/checkNOVO.php",
-                    "name": "SICARET PREDIAL",
+                    "name": "SICARET PREDIAL:DB",
                     "token": "",
                     "statusResponseCode": 0,
                     "responseType": "json",
@@ -108,7 +108,7 @@
                 },
                 {
                     "url": "https://sicaret20.spf.tabasco.gob.mx/rest/checkSICARET.php",
-                    "name": "SICARET AGUA",
+                    "name": "SICARET AGUA:DB",
                     "token": "",
                     "statusResponseCode": 0,
                     "responseType": "json",

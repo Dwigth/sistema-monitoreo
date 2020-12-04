@@ -44,7 +44,6 @@
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.5.4",
-    "snowfall-animation": "^1.0.5",
     "socket.io": "^2.3.0",
     "sqlite3": "^5.0.0",
     "tslib": "^1.10.0",

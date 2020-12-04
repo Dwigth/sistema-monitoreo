@@ -42,6 +42,7 @@ import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
 import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitorSystemsErrorsHistory } from './entities/MonitoredSystemsErrorsHistory';
+import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
 
 /**
  * ================================================
@@ -67,6 +68,7 @@ createConnection().then(async connection => {
 
     // Middlewares
     app.use(cors())
+    app.use(express.json())
 
     // Proceso de monitoreo
 
@@ -212,6 +214,47 @@ createConnection().then(async connection => {
         }
     });
 
+    app.get('/systems/all', async (req, res) => {
+        const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors', 'alarmPeople'] })
+        res.json(systems);
+    });
+
+    app.post('/systems/attach/person-to-system', async (req, res) => {
+        const people = req.body.people;
+        if (people && Array.isArray(people) && people.length > 0) {
+            const responses = people.map(async person => {
+                const systemId = person.systemId;
+                const email = person.email;
+                const name = person.name;
+                if ([systemId, email, name].includes(undefined) === false) {
+                    const system = await getRepository(MonitoredSystem).findOne({ where: { id: systemId } });
+                    if (system) {
+                        const personToAttach = new MonitorAlarmPeople();
+                        personToAttach.email = email;
+                        personToAttach.name = name;
+                        personToAttach.system = system;
+                        const alreadyExist = await getRepository(MonitorAlarmPeople).findOne({ where: { email: personToAttach.email, system: system } });
+                        if (alreadyExist) {
+                            return 'Este correo ya está asociado a este sistema.';
+                        } else {
+                            return await getRepository(MonitorAlarmPeople).save(personToAttach).then(() =>
+                                `Se ha registrado a ${personToAttach.name} con el correo ${personToAttach.email} al sistema ${personToAttach.system.systemName}`
+                            ).catch(e => e);
+                        }
+                    } else {
+                        return 'No se encontró el sistema.';
+                    }
+                } else {
+                    return 'Debe enviar todos los parametros.';
+                }
+            })
+            // Respuesta
+            res.json(await Promise.all(responses));
+        } else {
+            res.json('No se envió el parametro de manera correcta.')
+        }
+    });
+
     http.listen(3009, () => {
         console.log('listening on *:3009');
     });
@@ -259,7 +302,7 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: 
             }
         }
     } else {
-        console.log('[Verificando si hay errores en este sistema]', moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
+        console.log(`[Verificando si hay errores en este sistema][${system.systemName}]`, moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
         const lastErrors = await getRepository(MonitorSystemsErrors).find({ where: { system: system } });
         if (lastErrors.length > 0) {
             console.log('Se encontraron errores en este sistema... Procediendo a eliminarlos.', moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));

@@ -28,6 +28,7 @@ export class MailController {
             rejectUnauthorized: false
         }
     };
+    protected templateDir = __dirname.slice(0, __dirname.indexOf('dist'));
 
     constructor() {
         let options: SMTPTransport.Options = this.nodemailerConfig;
@@ -56,8 +57,10 @@ export class AlertMail extends MailController {
             const errors = await getManager().find(MonitorSystemsErrors, { relations: ["error"] });
 
             // console.log(response, errors);
+
             if (response.length > 0) {
-                const html = handlebars.compile(fs.readFileSync('email-template.html', 'utf-8'))({
+                console.log(`Intentando acceder al template de correo ${this.templateDir + 'server/email-template.html'}`);
+                const html = handlebars.compile(fs.readFileSync(this.templateDir + 'server/email-template.html', 'utf-8'))({
                     administrador: response.map(r => r.name).join(', '),
                     sistema: this.System.systemName,
                     errors: errors,

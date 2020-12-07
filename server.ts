@@ -5,7 +5,7 @@
  * 
  * ================================================
  */
-const dash = require('appmetrics-dash');
+// const dash = require('appmetrics-dash');
 require('dotenv').config()
 
 /**
@@ -259,7 +259,7 @@ createConnection().then(async connection => {
         console.log('listening on *:3009');
     });
 
-    dash.monitor({ server: http });
+    // dash.monitor({ server: http });
 
 }).catch(error => console.log(error));
 

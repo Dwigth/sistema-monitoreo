@@ -1,9 +1,4 @@
 <div id="mySidenav" class="sidenav bg-white">
-    <a href="javascript:void(0)" class="closebtn" (click)="sidemenu.closeNav()">
-        <span class="material-icons">
-            close
-        </span>
-    </a>
     <div *ngIf="sidemenu.CURRENT_SYSTEM != undefined" class="ml-5 container">
         <div>
             <!-- servicios web -->
@@ -95,4 +90,8 @@
             </tbody>
         </table>
     </div>
+
+    <a href="javascript:void(0)" class="btn btn-danger btn-block text-white" (click)="sidemenu.closeNav()">
+        Cerrar menu
+    </a>
 </div>

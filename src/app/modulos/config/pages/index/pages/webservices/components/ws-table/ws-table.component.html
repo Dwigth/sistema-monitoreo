@@ -1,1 +1,32 @@
-<p>ws-table works!</p>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>url</th>
+          <th>name</th>
+          <th>token</th>
+          <th>statusResponseCode</th>
+          <th>responseType</th>
+          <th>property</th>
+          <th>propertyDataType</th>
+          <th>isOkValue</th>
+          <th>isDownValue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let db of Webservices">
+          <td>{{db.id}}</td>
+          <td>{{db.url}}</td>
+          <td>{{db.name}}</td>
+          <td>{{db.token}}</td>
+          <td>{{db.statusResponseCode}}</td>
+          <td>{{db.responseType}}</td>
+          <td>{{db.property}}</td>
+          <td>{{db.propertyDataType}}</td>
+          <td>{{db.isOkValue}}</td>
+          <td>{{db.isDownValue}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

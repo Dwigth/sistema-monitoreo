@@ -1,3 +1,20 @@
+<div class="fixed-top">
+        <div class="menu bg-white ml-5">
+          <a routerLink="/main">
+            <p class="title">
+              Sistema de <b>MONITOREO</b>
+            </p>
+          </a>    
+          <span class="config">
+            <a routerLink="config">
+              <!-- Administrar -->
+            </a>
+          </span>
+        </div>
+      </div>
+<header class="pt-3 mt-4 text-muted border-top">
+        <a routerLink="/config">Ir a la Configuración</a>
+      </header>
 <app-sidemenu></app-sidemenu>
 <div style="margin-top: 5rem; margin-left: 11rem;">
         <app-system-info *ngFor="let system of systems" (click)="sidemenu.openNav(); sidemenu.system=system;"

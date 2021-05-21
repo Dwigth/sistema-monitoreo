@@ -44,7 +44,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.5.4",
     "socket.io": "^2.3.0",
-    "sqlite3": "^5.0.0",
+    "sqlite3": "^5.0.2",
     "tslib": "^1.10.0",
     "typeorm": "^0.2.29",
     "xml-js": "^1.6.11",

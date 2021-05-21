@@ -143,6 +143,13 @@
             "databases": []
         }
     ],
+    "MonitorGlobalConfiguration": {
+        "enableNotifications": false,
+        "emailAccount": "sf.buzonfinanzas@tabasco.gob.mx",
+        "maxConnections": 10,
+        "host": "correo.tabasco.gob.mx",
+        "port": 465
+    },
     "MonitorConfiguration": [
         {
             "timeInterval": 10000,

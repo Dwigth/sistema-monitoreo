@@ -43,6 +43,7 @@ import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitorSystemsErrorsHistory } from './entities/MonitoredSystemsErrorsHistory';
 import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
+import { MonitorGlobalConfiguration } from './entities/MonitorGlobalConfiguration';
 
 /**
  * ================================================
@@ -270,7 +271,7 @@ const WebServiceErrorMsg = (wsname, val, expectedValue) => 'Ha ocurrido un error
 
 async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: string, msg?: string) {
     if (statusCode >= 201) {
-
+        const globalConfiguration = await getRepository(MonitorGlobalConfiguration).findOne();
         const errorCat = await getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
         if (errorCat) {
             const latestError = await getRepository(MonitorSystemsErrors).findOne({ where: { system: system, error: errorCat } });
@@ -290,9 +291,13 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: 
                     SystemErrorHistory.description = (msg != undefined) ? msg : ErrorMsg(type, errorCat.description);
                     await getManager().save(systemError);
                     await getManager().save(SystemErrorHistory);
-                    const alertEmail = new AlertMail();
-                    alertEmail.CurrentSystem = system;
-                    await alertEmail.SendEmail();
+                    if (globalConfiguration.enableNotifications) {
+                        const alertEmail = new AlertMail();
+                        alertEmail.CurrentSystem = system;
+                        await alertEmail.SendEmail();
+                    } else {
+                        console.error(new Error('Las notificaciones no están activadas.'))
+                    }
                 } catch (error) {
                     console.log(error);
 

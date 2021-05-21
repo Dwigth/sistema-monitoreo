@@ -1,0 +1,45 @@
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Sistema</th>
+          <th>Fecha de registro</th>
+          <th>Bases de datos</th>
+          <th>Sitios web</th>
+          <th>Servicios web </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let system of MonitoredSystems">
+          <td>{{system.id}}</td>
+          <td>{{system.systemName}}</td>
+          <td>{{system.upDate|date}}</td>
+          <td>
+            <a [routerLink]="'/config/index/databases/'+system.id">
+              <span *ngIf="system.databases.length; else other_content">
+                {{system.databases.length}}
+              </span>
+              <ng-template #other_content>Añadir</ng-template>
+            </a>
+          </td>
+          <td>
+            <a [routerLink]="'/config/index/websites/'+system.id">
+            <span *ngIf="system.websites.length; else other_content">
+              {{system.websites.length}}
+            </span>
+            <ng-template #other_content>Añadir</ng-template>
+            </a>
+          </td>
+          <td>
+            <a [routerLink]="'/config/index/webservices/'+system.id">
+            <span *ngIf="system.webservices.length; else other_content">
+              {{system.webservices.length}}
+            </span>
+            <ng-template #other_content>Añadir</ng-template>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

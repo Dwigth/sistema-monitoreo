@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="card-body">
+  
+      <form [formGroup]="SystemForm" (ngSubmit)="OnSubmit()">
+        <div class="mb-3">
+          <label for="systemname" class="form-label">Nombre del sistema</label>
+          <input required formControlName="systemName" type="text" class="form-control" id="systemname" placeholder="">
+        </div>
+  
+        <button type="submit" class="btn btn-primary">Añadir</button>
+      </form>
+    </div>
+  </div>
+  

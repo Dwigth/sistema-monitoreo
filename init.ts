@@ -5,6 +5,7 @@ import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitoredWebsite } from './entities/MonitoredWebsite';
 import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
+import { MonitorGlobalConfiguration } from './entities/MonitorGlobalConfiguration';
 import { getManager } from "typeorm";
 import { createConnection } from 'typeorm';
 //@ts-ignore
@@ -20,8 +21,24 @@ class StartSequence {
     }
 
     async InsertAll() {
+        // Insertamos la configuración global
+        if (config.MonitorGlobalConfiguration) {
+            const _config = config.MonitorGlobalConfiguration;
+            const GlobalConfig = new MonitorGlobalConfiguration();
+            
+            GlobalConfig.enableNotifications = _config.enableNotifications;
+            GlobalConfig.emailAccount = _config.emailAccount;
+            GlobalConfig.passwordAccount = '';
+            GlobalConfig.maxConnections = _config.maxConnections;
+            GlobalConfig.host = _config.host;
+            GlobalConfig.port = _config.port;
 
-        // Insertamos primero la configuración
+            await getManager().save(GlobalConfig);
+            console.log('Se ha insertado la información global');
+            
+        }
+
+        // Insertamos la configuración de comportamiento
         if (config.MonitorConfiguration.length > 0) {
             Array.from(config.MonitorConfiguration).forEach(async (_config: any) => {
                 const MonitorConfig = new MonitorConfiguration();
@@ -108,6 +125,9 @@ class StartSequence {
     async DeleteAll() {
         console.log('Borramos configuraciones');
         // Borramos todo
+        const gconfig = await getManager().find(MonitorGlobalConfiguration);
+        gconfig.forEach(async (mc) => await getManager().remove(mc));
+
         const configs = await getManager().find(MonitorConfiguration);
         configs.forEach(async (mc) => await getManager().remove(mc));
 

@@ -44,6 +44,8 @@ import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitorSystemsErrorsHistory } from './entities/MonitoredSystemsErrorsHistory';
 import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
 import { MonitorGlobalConfiguration } from './entities/MonitorGlobalConfiguration';
+import { MonitoredDatabase } from './entities/MonitoredDatabase';
+import { MonitoredWebsite } from './entities/MonitoredWebsite';
 
 /**
  * ================================================
@@ -274,6 +276,52 @@ createConnection().then(async connection => {
             res.json({ error: true, msg: 'No se ha enviado ningun dato.' })
         }
     });
+
+    app.get('/systems/databases', async (req, res) => {
+        const id = parseInt(req.query["systemId"].toString())
+        if(id) {
+            const system = await getRepository(MonitoredSystem).findOne({where:{id:id}});
+            if(system) {
+                const databases = await getRepository(MonitoredDatabase).find({where:{system:system}})
+                res.json({error:false,msg:'',data:databases})
+            }else {
+                res.json({error:true,msg:'No se encontró un sistema asociado con este ID.'})
+            }
+        } else {
+            const databases = await getRepository(MonitoredDatabase).find()
+            res.json({error:false,msg:'',data:databases})
+        }
+    })
+    app.get('/systems/websites', async (req, res) => {
+        const id = parseInt(req.query["systemId"].toString())
+        if(id) {
+            const system = await getRepository(MonitoredSystem).findOne({where:{id:id}});
+            if(system) {
+                const websites = await getRepository(MonitoredWebsite).find({where:{system:system}})
+                res.json({error:false,msg:'',data:websites})
+            }else {
+                res.json({error:true,msg:'No se encontró un sistema asociado con este ID.'})
+            }
+        } else {
+            const websites = await getRepository(MonitoredWebsite).find()
+            res.json({error:false,msg:'',data:websites})
+        }
+    })
+    app.get('/systems/webservices', async (req, res) => {
+        const id = parseInt(req.query["systemId"].toString())
+        if(id) {
+            const system = await getRepository(MonitoredSystem).findOne({where:{id:id}});
+            if(system) {
+                const ws = await getRepository(MonitoredWebService).find({where:{system:system}})
+                res.json({error:false,msg:'',data:ws})
+            }else {
+                res.json({error:true,msg:'No se encontró un sistema asociado con este ID.'})
+            }
+        } else {
+            const ws = await getRepository(MonitoredWebService).find()
+            res.json({error:false,msg:'',data:ws})
+        }
+    })
 
     http.listen(3009, () => {
         console.log('listening on *:3009');

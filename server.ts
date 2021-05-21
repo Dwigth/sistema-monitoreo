@@ -256,6 +256,25 @@ createConnection().then(async connection => {
         }
     });
 
+    app.post('/systems/add', async (req, res) => {
+        let systemName = req.body.systemName;
+        if (systemName) {
+            systemName = systemName.trim();
+            const exists = await getRepository(MonitoredSystem).findOne({ where: { systemName: systemName } })
+            if (exists) {
+            res.json({ error: true, msg: `Ya existe un sistema con el nombre "${systemName}"`  })
+            } else {
+                const system = new MonitoredSystem();
+                system.systemName = systemName;
+                system.upDate = new Date();
+                await getManager().save(system);
+                res.json({ error: false, msg: 'Se ha guardado el sistema.' })
+            }
+        } else {
+            res.json({ error: true, msg: 'No se ha enviado ningun dato.' })
+        }
+    });
+
     http.listen(3009, () => {
         console.log('listening on *:3009');
     });

@@ -22,7 +22,19 @@ export class ConfigService {
       }),
       retry(1)
     );
+  }
 
+  AddSystem(systemName) {
+    return this.http.post(environment.url + '/systems/add', {systemName},this.headers.httpOptions).pipe(
+      map((res: any) => {
+        if (res.error) {
+          return res;
+        } else {
+          return res;
+        }
+      }),
+      retry(1)
+    );
   }
 
 }

@@ -6,8 +6,27 @@
           <label for="systemname" class="form-label">Nombre del sistema</label>
           <input required formControlName="systemName" type="text" class="form-control" id="systemname" placeholder="">
         </div>
-  
-        <button type="submit" class="btn btn-primary">Añadir</button>
+        <div *ngIf="SystemForm.get('systemName').hasError('minlength')"
+        class="alert alert-warning" role="alert">
+        El nombre del sistema debe ser más largo.
+      </div>
+        <div *ngIf="SystemForm.get('systemName').hasError('maxlength')"
+        class="alert alert-danger" role="alert">
+          El nombre del sistema pasa el límite soportado.
+        </div>
+        <div *ngIf="SystemForm.get('systemName').hasError('required')"
+        class="alert alert-warning" role="alert">
+          El nombre del sistema es requerido.
+        </div>
+        <div *ngIf="Error"
+        class="alert alert-danger" role="alert">
+          {{ErrorMSG}}
+        </div>
+        <div *ngIf="ErrorMSG && Error == false"
+        class="alert alert-success" role="alert">
+          {{ErrorMSG}}
+        </div>
+        <button [disabled]="!SystemForm.get('systemName').valid" type="submit" class="btn btn-primary">Añadir</button>
       </form>
     </div>
   </div>

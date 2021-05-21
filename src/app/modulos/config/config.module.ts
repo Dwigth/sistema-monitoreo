@@ -12,11 +12,15 @@ import { NotificationsComponent } from './pages/index/pages/notifications/notifi
 import { SystemFormComponent } from './pages/index/pages/systems/components/system-form/system-form.component';
 import { SystemTableComponent } from './pages/index/pages/systems/components/system-table/system-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { DbTableComponent } from './pages/index/pages/databases/components/db-table/db-table.component';
+import { WTableComponent } from './pages/index/pages/websites/components/w-table/w-table.component';
+import { WFormComponent } from './pages/index/pages/websites/components/w-form/w-form.component';
+import { WsFormComponent } from './pages/index/pages/webservices/components/ws-form/ws-form.component';
+import { WsTableComponent } from './pages/index/pages/webservices/components/ws-table/ws-table.component';
 
 
 @NgModule({
-  declarations: [MainComponent, IndexComponent, SystemsComponent, WebservicesComponent, DatabasesComponent, WebsitesComponent, ErrorhistoryComponent, NotificationsComponent, SystemFormComponent, SystemTableComponent],
+  declarations: [MainComponent, IndexComponent, SystemsComponent, WebservicesComponent, DatabasesComponent, WebsitesComponent, ErrorhistoryComponent, NotificationsComponent, SystemFormComponent, SystemTableComponent, DbTableComponent, WTableComponent, WFormComponent, WsFormComponent, WsTableComponent,],
   imports: [
     CommonModule,
     ConfigRoutingModule,

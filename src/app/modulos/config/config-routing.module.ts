@@ -38,6 +38,11 @@ const routes: Routes = [
           {
             path:'table',
             component:SystemTableComponent
+          },
+          {
+            path: '',
+            redirectTo: '/config/index/systems/table',
+            pathMatch: 'full'
           }
         ]
       },
@@ -56,6 +61,11 @@ const routes: Routes = [
           {
             path:'table/:systemId',
             component:WTableComponent
+          },
+          {
+            path: '',
+            redirectTo: '/config/index/websites/table',
+            pathMatch: 'full'
           }
         ]
       },
@@ -74,6 +84,11 @@ const routes: Routes = [
           {
             path:'table/:systemId',
             component:WsTableComponent
+          },
+          {
+            path: '',
+            redirectTo: '/config/index/webservices/table',
+            pathMatch: 'full'
           }
         ]
       },
@@ -92,6 +107,11 @@ const routes: Routes = [
           {
             path:'table/:systemId',
             component:DbTableComponent
+          },
+          {
+            path: '',
+            redirectTo: '/config/index/databases/table',
+            pathMatch: 'full'
           }
         ]
       },

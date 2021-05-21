@@ -37,11 +37,11 @@ export class ConfigService {
     );
   }
 
-  GetDatabases(systemId: number) {
-    return this.http.get(environment.url + '/systems/add', {
+  private GetRelativeInformation(url:string,systemId?: number) {
+    return this.http.get(environment.url + '/systems/'+url, {
       headers: this.headers.httpOptions,
       params: {
-        systemId: systemId.toString()
+        systemId: (systemId) ? systemId.toString() : null
       }
     }).pipe(
       map((res: any) => {
@@ -54,5 +54,16 @@ export class ConfigService {
       retry(1)
     );
   }
+
+  GetDatabases(systemId?: number) {
+   return this.GetRelativeInformation('databases',systemId);
+  }
+  GetWebsites(systemId?: number) {
+   return this.GetRelativeInformation('websites',systemId);
+  }
+  GetWebservices(systemId?: number) {
+   return this.GetRelativeInformation('webservices',systemId);
+  }
+  
 
 }

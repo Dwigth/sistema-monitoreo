@@ -1,1 +1,34 @@
-<p>db-table works!</p>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tipo</th>
+          <th>Nombre</th>
+          <th>Host</th>
+          <th>Puerto</th>
+          <th>Usuario</th>
+          <th>SID</th>
+          <th>Contraseña</th>
+          <th>Etiqueta</th>
+          <th>base de datos</th>
+          <th>CR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let db of Databases">
+          <td>{{db.id}}</td>
+          <td>{{db.type}}</td>
+          <td>{{db.name}}</td>
+          <td>{{db.host}}</td>
+          <td>{{db.port}}</td>
+          <td>{{db.username}}</td>
+          <td>{{db.sid}}</td>
+          <td>{{db.password}}</td>
+          <td>{{db.label}}</td>
+          <td>{{db.databaseName}}</td>
+          <td>{{db.statusResponseCode}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

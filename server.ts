@@ -322,6 +322,12 @@ createConnection().then(async connection => {
             res.json({error:false,msg:'',data:ws})
         }
     })
+    app.get('/system/configs', async (req, res) => {
+        
+    })
+    app.post('/system/edit/notifications', async (req, res) => {
+
+    });
 
     http.listen(3009, () => {
         console.log('listening on *:3009');

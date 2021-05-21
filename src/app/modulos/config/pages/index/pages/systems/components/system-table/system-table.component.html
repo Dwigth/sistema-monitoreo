@@ -16,7 +16,7 @@
           <td>{{system.systemName}}</td>
           <td>{{system.upDate|date}}</td>
           <td>
-            <a [routerLink]="'/config/index/databases/'+system.id">
+            <a [routerLink]="'/config/index/databases/table/'+system.id">
               <span *ngIf="system.databases.length; else other_content">
                 {{system.databases.length}}
               </span>
@@ -24,7 +24,7 @@
             </a>
           </td>
           <td>
-            <a [routerLink]="'/config/index/websites/'+system.id">
+            <a [routerLink]="'/config/index/websites/table/'+system.id">
             <span *ngIf="system.websites.length; else other_content">
               {{system.websites.length}}
             </span>
@@ -32,7 +32,7 @@
             </a>
           </td>
           <td>
-            <a [routerLink]="'/config/index/webservices/'+system.id">
+            <a [routerLink]="'/config/index/webservices/table/'+system.id">
             <span *ngIf="system.webservices.length; else other_content">
               {{system.webservices.length}}
             </span>

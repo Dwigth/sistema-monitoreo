@@ -5,6 +5,9 @@ import { DbFormComponent } from './pages/index/pages/databases/components/db-for
 import { DbTableComponent } from './pages/index/pages/databases/components/db-table/db-table.component';
 import { DatabasesComponent } from './pages/index/pages/databases/databases.component';
 import { ErrorhistoryComponent } from './pages/index/pages/errorhistory/errorhistory.component';
+import { AssociatesFormComponent } from './pages/index/pages/notifications/components/associates-form/associates-form.component';
+import { EmailFormComponent } from './pages/index/pages/notifications/components/email-form/email-form.component';
+import { TimersFormComponent } from './pages/index/pages/notifications/components/timers-form/timers-form.component';
 import { NotificationsComponent } from './pages/index/pages/notifications/notifications.component';
 import { SystemFormComponent } from './pages/index/pages/systems/components/system-form/system-form.component';
 import { SystemTableComponent } from './pages/index/pages/systems/components/system-table/system-table.component';
@@ -121,7 +124,26 @@ const routes: Routes = [
       },
       {
         path:'notifications',
-        component:NotificationsComponent
+        component:NotificationsComponent,
+        children:[
+          {
+            path:'email',
+            component:EmailFormComponent
+          },
+          {
+            path:'timers',
+            component:TimersFormComponent
+          },
+          {
+            path:'associates',
+            component:AssociatesFormComponent
+          },
+          {
+            path: '',
+            redirectTo: '/config/index/notifications/email',
+            pathMatch: 'full'
+          }
+        ]
       },
       {
         path: '',

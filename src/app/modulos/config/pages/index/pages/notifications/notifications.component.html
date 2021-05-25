@@ -1,3 +1,27 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Panel de notificaciones</h1>
   </div>
+
+
+  <div class="card">
+    <div class="card-body">
+      <ul class="nav nav-tabs mb-5">
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" routerLink="email" aria-current="page" href="#">
+            Notificaciones
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="timers" routerLinkActive="active" class="nav-link" href="#">
+            Temporizadores
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="associates" routerLinkActive="active" class="nav-link" href="#">
+            Asociados
+          </a>
+        </li>
+      </ul>
+      <router-outlet></router-outlet>
+    </div>
+  </div>

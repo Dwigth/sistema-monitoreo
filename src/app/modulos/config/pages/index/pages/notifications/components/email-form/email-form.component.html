@@ -1,0 +1,37 @@
+<form [formGroup]="EmailNotificationsForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3 form-check">
+        <input formControlName="enableNotifications" type="checkbox" class="form-check-input" id="activar-notificaciones">
+        <label class="form-check-label" for="activar-notificaciones">Activar notificaciones</label>
+        </div>
+    <div class="mb-3">
+      <label for="InputAccount" class="form-label">Cuenta de correo</label>
+      <input formControlName="emailAccount" type="email" class="form-control" id="InputAccount" aria-describedby="emailHelp">
+      <div id="accountHelp" class="form-text">Este es el correo por el cual se enviarán las notificaciones.</div>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Contraseña</label>
+      <input formControlName="passwordAccount" type="password" class="form-control" id="password" aria-describedby="emailHelp">
+      <div id="passwordHelp" class="form-text">La contraseña de la cuenta.</div>
+    </div>
+    <div class="mb-3">
+      <label for="MaxConnections" class="form-label">Conexiones máximas</label>
+      <input formControlName="maxConnections" type="number" class="form-control" id="MaxConnections" aria-describedby="emailHelp">
+      <div id="mcHelp" class="form-text">Es el recuento de conexiones simultáneas máximas para realizar contra el servidor SMTP.</div>
+    </div>
+    <div class="mb-3">
+      <label for="Host" class="form-label">Host</label>
+      <input formControlName="host" type="text" class="form-control" id="Host" aria-describedby="emailHelp">
+      <div id="hostHelp" class="form-text">Es el nombre de host o la dirección IP a la que conectarse (el valor predeterminado es "localhost").</div>
+    </div>
+    <div class="mb-3">
+        <label for="Port" class="form-label">Port</label>
+        <input formControlName="port" type="number" class="form-control" id="Port">
+        <div id="portHelp" class="form-text">Es el puerto al que conectarse.</div>
+    </div>
+    <div class="mb-3 form-check">
+        <input formControlName="savePasswordOnDB" type="checkbox" class="form-check-input" id="guardar-password">
+        <label class="form-check-label" for="guardar-password">Guardar contraseña en base de datos.</label>
+        <div id="guardar-passwordHelp" class="form-text">De no guardarse en la base de datos se guardará solamente en el archivo .env .</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>

@@ -24,6 +24,37 @@ export class ConfigService {
     );
   }
 
+  GetNotificationData() {
+    return this.http.get(environment.url + '/system/configs', {
+      headers: this.headers.httpOptions,
+    }).pipe(
+      map((res: any) => {
+        if (res.error) {
+          return res;
+        } else {
+          return res;
+        }
+      }),
+      retry(1)
+    );
+  }
+
+  EditNotificationData(data) {
+    return this.http.post(environment.url + '/system/edit/notifications', data ,{
+      headers: this.headers.httpOptions,
+    }).pipe(
+      map((res: any) => {
+        if (res.error) {
+          return res;
+        } else {
+          return res;
+        }
+      }),
+      retry(1)
+    );
+    
+  }
+
   AddSystem(systemName: string) {
     return this.http.post(environment.url + '/systems/add', { systemName }, this.headers.httpOptions).pipe(
       map((res: any) => {

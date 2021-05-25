@@ -17,10 +17,13 @@ import { WTableComponent } from './pages/index/pages/websites/components/w-table
 import { WFormComponent } from './pages/index/pages/websites/components/w-form/w-form.component';
 import { WsFormComponent } from './pages/index/pages/webservices/components/ws-form/ws-form.component';
 import { WsTableComponent } from './pages/index/pages/webservices/components/ws-table/ws-table.component';
+import { EmailFormComponent } from './pages/index/pages/notifications/components/email-form/email-form.component';
+import { TimersFormComponent } from './pages/index/pages/notifications/components/timers-form/timers-form.component';
+import { AssociatesFormComponent } from './pages/index/pages/notifications/components/associates-form/associates-form.component';
 
 
 @NgModule({
-  declarations: [MainComponent, IndexComponent, SystemsComponent, WebservicesComponent, DatabasesComponent, WebsitesComponent, ErrorhistoryComponent, NotificationsComponent, SystemFormComponent, SystemTableComponent, DbTableComponent, WTableComponent, WFormComponent, WsFormComponent, WsTableComponent,],
+  declarations: [MainComponent, IndexComponent, SystemsComponent, WebservicesComponent, DatabasesComponent, WebsitesComponent, ErrorhistoryComponent, NotificationsComponent, SystemFormComponent, SystemTableComponent, DbTableComponent, WTableComponent, WFormComponent, WsFormComponent, WsTableComponent, EmailFormComponent, TimersFormComponent, AssociatesFormComponent,],
   imports: [
     CommonModule,
     ConfigRoutingModule,

@@ -42,7 +42,7 @@ export async function ErrorHandler(system: MonitoredSystem, statusCode: number, 
                         alertEmail.CurrentSystem = system;
                         await alertEmail.SendEmail();
                     } else {
-                        console.error(new Error('Las notificaciones no están activadas.'))
+                        console.error('Las notificaciones no están activadas.');
                     }
                 } catch (error) {
                     console.log(error);

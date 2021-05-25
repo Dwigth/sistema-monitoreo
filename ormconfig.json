@@ -6,7 +6,7 @@
       "synchronize": true,
       "logging": false,
       "entities": [
-         "dist/server/entities/*.js"
+         "entities/*.ts"
       ],
       "migrations": [
          "src/migration/**/*.ts"

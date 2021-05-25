@@ -23,10 +23,7 @@ import { createServer } from 'http';
 import * as socketio from 'socket.io';
 import axios, { AxiosResponse } from 'axios';
 import * as cors from 'cors';
-import * as xml from 'xml-js';
 import * as moment from 'moment';
-import { AlertMail } from './email';
-const objgrep = require('object-grep');
 
 /**
  * ================================================
@@ -35,17 +32,11 @@ const objgrep = require('object-grep');
  * 
  * ================================================
  */
-import { ConnectionManager, createConnection, Entity, getManager, getRepository } from 'typeorm';
+import { ConnectionManager, createConnection, getRepository } from 'typeorm';
 import { MonitoredSystem, } from './entities/MonitoredSystem';
 import { MonitorConfiguration } from './entities/MonitorConfiguration';
-import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
-import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
-import { MonitoredWebService } from './entities/MonitoredWebService';
-import { MonitorSystemsErrorsHistory } from './entities/MonitoredSystemsErrorsHistory';
-import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
-import { MonitorGlobalConfiguration } from './entities/MonitorGlobalConfiguration';
-import { MonitoredDatabase } from './entities/MonitoredDatabase';
-import { MonitoredWebsite } from './entities/MonitoredWebsite';
+import { REST } from './rest';
+import { ErrorHandler, AnalizingWebServiceContent } from './helpers';
 
 /**
  * ================================================
@@ -202,96 +193,7 @@ createConnection().then(async connection => {
     app.use('/', express.static(__dirname.replace('server', 'monitoreo')));
 
     // Rutas 
-    app.delete('/resolve/issue/:id', async (req, res) => {
-        const id = req.params.id;
-        const error = await getRepository(MonitorSystemsErrors).findOne({ where: { id: id } });
-        if (error) {
-            const deleted = await getRepository(MonitorSystemsErrors).remove(error);
-            if (deleted) {
-                res.json({ error: false, msg: `Se ha resuelto el error ${error.description}` })
-            } else {
-                res.json({ error: true, msg: 'Ocurrió un error durante la ejecución.', info: deleted })
-            }
-        } else {
-            res.json({ error: true, msg: 'No se encontró el error del sistema.' })
-        }
-    });
-
-    app.get('/systems/all', async (req, res) => {
-        const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors', 'alarmPeople'] })
-        res.json(systems);
-    });
-
-    app.post('/systems/attach/person-to-system', async (req, res) => {
-        const people = req.body.people;
-        if (people && Array.isArray(people) && people.length > 0) {
-            const responses = people.map(async person => {
-                const systemId = person.systemId;
-                const email = person.email;
-                const name = person.name;
-                if ([systemId, email, name].includes(undefined) === false) {
-                    const system = await getRepository(MonitoredSystem).findOne({ where: { id: systemId } });
-                    if (system) {
-                        const personToAttach = new MonitorAlarmPeople();
-                        personToAttach.email = email;
-                        personToAttach.name = name;
-                        personToAttach.system = system;
-                        const alreadyExist = await getRepository(MonitorAlarmPeople).findOne({ where: { email: personToAttach.email, system: system } });
-                        if (alreadyExist) {
-                            return 'Este correo ya está asociado a este sistema.';
-                        } else {
-                            return await getRepository(MonitorAlarmPeople).save(personToAttach).then(() =>
-                                `Se ha registrado a ${personToAttach.name} con el correo ${personToAttach.email} al sistema ${personToAttach.system.systemName}`
-                            ).catch(e => e);
-                        }
-                    } else {
-                        return 'No se encontró el sistema.';
-                    }
-                } else {
-                    return 'Debe enviar todos los parametros.';
-                }
-            })
-            // Respuesta
-            res.json(await Promise.all(responses));
-        } else {
-            res.json('No se envió el parametro de manera correcta.')
-        }
-    });
-
-    app.post('/systems/add', async (req, res) => {
-        let systemName = req.body.systemName;
-        if (systemName) {
-            systemName = systemName.trim();
-            const exists = await getRepository(MonitoredSystem).findOne({ where: { systemName: systemName } })
-            if (exists) {
-            res.json({ error: true, msg: `Ya existe un sistema con el nombre "${systemName}"`  })
-            } else {
-                const system = new MonitoredSystem();
-                system.systemName = systemName;
-                system.upDate = new Date();
-                await getManager().save(system);
-                res.json({ error: false, msg: 'Se ha guardado el sistema.' })
-            }
-        } else {
-            res.json({ error: true, msg: 'No se ha enviado ningun dato.' })
-        }
-    });
-
-    app.get('/systems/databases', async (req, res) => {
-        GetDataWithOrWithoutID<MonitoredDatabase>(req,res,MonitoredDatabase);
-    })
-    app.get('/systems/websites', async (req, res) => {
-        GetDataWithOrWithoutID<MonitoredWebsite>(req,res,MonitoredWebsite);
-    })
-    app.get('/systems/webservices', async (req, res) => {
-        GetDataWithOrWithoutID<MonitoredWebService>(req,res,MonitoredWebService);
-    })
-    app.get('/system/configs', async (req, res) => {
-        
-    })
-    app.post('/system/edit/notifications', async (req, res) => {
-
-    });
+    REST(app)
 
     http.listen(3009, () => {
         console.log('listening on *:3009');
@@ -300,124 +202,3 @@ createConnection().then(async connection => {
     // dash.monitor({ server: http });
 
 }).catch(error => console.log(error));
-
-// Error Handling, etc...
-
-const ErrorMsg = (name, description) => `${name} ha sufrido un error del tipo: ${description}`;
-const WebServiceErrorMsg = (wsname, val, expectedValue) => 'Ha ocurrido un error con ' + wsname + `. Valor recibido: ${val}, Valor esperado: ${expectedValue}`;
-
-async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: string, msg?: string) {
-    if (statusCode >= 201) {
-        const globalConfiguration = await getRepository(MonitorGlobalConfiguration).findOne();
-        const errorCat = await getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
-        if (errorCat) {
-            const latestError = await getRepository(MonitorSystemsErrors).findOne({ where: { system: system, error: errorCat } });
-            if (latestError === undefined) {
-                try {
-                    const systemError = new MonitorSystemsErrors();
-                    let SystemErrorHistory = new MonitorSystemsErrorsHistory();
-
-                    systemError.error = errorCat;
-                    systemError.system = system;
-                    systemError.timestamp = new Date();
-                    systemError.description = (msg != undefined) ? msg : ErrorMsg(type, errorCat.description);
-
-                    SystemErrorHistory.error = errorCat;
-                    SystemErrorHistory.system = system;
-                    SystemErrorHistory.timestamp = new Date();
-                    SystemErrorHistory.description = (msg != undefined) ? msg : ErrorMsg(type, errorCat.description);
-                    await getManager().save(systemError);
-                    await getManager().save(SystemErrorHistory);
-                    if (globalConfiguration.enableNotifications) {
-                        const alertEmail = new AlertMail();
-                        alertEmail.CurrentSystem = system;
-                        await alertEmail.SendEmail();
-                    } else {
-                        console.error(new Error('Las notificaciones no están activadas.'))
-                    }
-                } catch (error) {
-                    console.log(error);
-
-                }
-            } else {
-                console.log('El error persiste');
-            }
-        }
-    } else {
-        console.log(`[Verificando si hay errores en este sistema][${system.systemName}]`, moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
-        const lastErrors = await getRepository(MonitorSystemsErrors).find({ where: { system: system } });
-        if (lastErrors.length > 0) {
-            console.log('Se encontraron errores en este sistema... Procediendo a eliminarlos.', moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
-            console.log(lastErrors);
-            lastErrors.forEach(error => getRepository(MonitorSystemsErrors).remove(error));
-        }
-    }
-}
-/**
- * 
- */
-async function AnalizingWebServiceContent(ws: MonitoredWebService, response: string) {
-    let type = '';
-    switch (ws.responseType) {
-        case 'string':
-            response = response.trim();
-            if (response.indexOf(ws.isOkValue) < 0 || response === '') {
-                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`, WebServiceErrorMsg(ws.name, response, ws.isOkValue));
-                console.log('Ha ocurrido un error con ', ws.name);
-                return;
-            }
-            // console.log('Todo está bien.');
-            break;
-        case 'json':
-            response = JSON.parse(JSON.stringify(response));
-            const val = response[ws.property];
-            let expectedValue = '';
-            if (['number', 'boolean'].includes(ws.propertyDataType)) {
-                expectedValue = JSON.parse(ws.isOkValue);
-            } else {
-                // Es un string
-                expectedValue = ws.isOkValue;
-            }
-            // console.log(val, expectedValue);
-
-            // console.log(response, ws.property, typeof val, typeof JSON.parse(ws.isOkValue));
-            if (val !== expectedValue || val === '') {
-                ErrorHandler(ws.system, 206, `El servicio web "${ws.name}"`, WebServiceErrorMsg(ws.name, val, ws.isOkValue));
-                console.log('Ha ocurrido un error con ' + ws.name, `Valor recibido: ${val}, Valor esperado: ${expectedValue}`);
-                return;
-            }
-            // console.log('Todo está bien');
-            break;
-        case 'xml':
-            const result = xml.xml2js(response, { compact: true });
-            try {
-                let r = objgrep.objectGrep(result, ws.isOkValue);
-                if (r === {}) {
-                    ErrorHandler(ws.system, 204, ws.name, WebServiceErrorMsg(ws.name, response, ws.isOkValue))
-                    console.log('Ha ocurrido un error con ' + ws.name);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-
-            break;
-        default:
-            break;
-    }
-}
-
-async function GetDataWithOrWithoutID<T>(req,res,entity) {
-    const id = parseInt(req.query["systemId"].toString())
-    if(id) {
-        const system = await getRepository(MonitoredSystem).findOne({where:{id:id}});
-        if(system) {
-            const data = await getRepository<T>(entity).find({where:{system:system}})
-            res.json({error:false,msg:'',data:data})
-        }else {
-            res.json({error:true,msg:'No se encontró un sistema asociado con este ID.'})
-        }
-    } else {
-        const data = await getRepository<T>(entity).find()
-        res.json({error:false,msg:'',data:data})
-    }
-}

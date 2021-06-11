@@ -169,4 +169,21 @@ app.post('/system/edit/notifications', async (req, res) => {
 
 });
 
+app.post('/systems/edit', async (req, res) => {
+    const data = <MonitoredSystem>req.body;
+
+})
+app.post('/systems/edit/databases'), async (req, res) => {
+    const data = <MonitoredDatabase>req.body;
+
+}
+app.post('/systems/edit/websites', async (req, res) => {
+    const data = <MonitoredWebsite>req.body;
+
+})
+app.post('/systems/edit/webservices', async (req, res) => {
+    const data = <MonitoredWebService>req.body;
+
+})
+
 }

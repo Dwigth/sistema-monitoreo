@@ -12,8 +12,8 @@ import { ConfigComponent } from './pages/config/config.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { SidemenuComponent } from './pages/main/sidemenu/sidemenu.component';
-import { ShortenUrlPipe } from './pages/main/sidemenu/shorten-url.pipe';
 import { SnackbarModule } from 'ngx-snackbar';
+import { Pipes } from 'src/pipes';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -25,7 +25,6 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     SystemInfoComponent,
     ConfigComponent,
     SidemenuComponent,
-    ShortenUrlPipe
   ],
   imports: [
     BrowserModule,
@@ -34,7 +33,8 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ReactiveFormsModule,
     HttpClientModule,
     SocketIoModule.forRoot(config),
-    SnackbarModule.forRoot()
+    SnackbarModule.forRoot(),
+    Pipes
   ],
   providers: [],
   bootstrap: [AppComponent]

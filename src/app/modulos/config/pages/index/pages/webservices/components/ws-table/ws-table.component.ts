@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { IMonitoredWebservice } from 'src/app/interfaces/core';
 import { ConfigService } from 'src/app/modulos/config/config-service.service';
-
+import { COPY } from 'src/app/classes/helpers';
 @Component({
   selector: 'app-ws-table',
   templateUrl: './ws-table.component.html',
@@ -14,7 +14,10 @@ export class WsTableComponent implements OnInit {
   private sub: Subscription;
   private systemId:number;
   public Webservices:IMonitoredWebservice[];
-  constructor(private route: ActivatedRoute, private configS:ConfigService) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private configS:ConfigService,
+    private router:Router) { }
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
@@ -29,6 +32,16 @@ export class WsTableComponent implements OnInit {
 
  ngOnDestroy() {
    this.sub.unsubscribe();
+ }
+
+ addToken() {
+   this.router.navigate(['/config/index/webservices/add'],{queryParams:{
+     state:0
+   }})
+ }
+
+ copy(token) {
+  COPY(token);
  }
 
 }

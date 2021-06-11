@@ -3,13 +3,10 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinC
 @Entity()
 export class MonitorGlobalConfiguration {
 
-    @PrimaryGeneratedColumn()
-    id: number;
-
     @Column({ type: 'boolean' })
     enableNotifications: boolean;
 
-    @Column({ type: 'varchar' })
+    @PrimaryColumn({ type: 'varchar' })
     emailAccount: string;
     
     @Column({ type: 'varchar' })

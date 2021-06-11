@@ -20,6 +20,7 @@ import { WsTableComponent } from './pages/index/pages/webservices/components/ws-
 import { EmailFormComponent } from './pages/index/pages/notifications/components/email-form/email-form.component';
 import { TimersFormComponent } from './pages/index/pages/notifications/components/timers-form/timers-form.component';
 import { AssociatesFormComponent } from './pages/index/pages/notifications/components/associates-form/associates-form.component';
+import { Pipes } from 'src/pipes';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { AssociatesFormComponent } from './pages/index/pages/notifications/compo
     ConfigRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    Pipes
   ]
 })
 export class ConfigModule { }

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-striped table-sm">
+    <table class="table table-hover table-striped table-lg w-auto">
       <thead>
         <tr>
           <th>#</th>
@@ -15,17 +15,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let db of Webservices">
-          <td>{{db.id}}</td>
-          <td>{{db.url}}</td>
-          <td>{{db.name}}</td>
-          <td>{{db.token}}</td>
-          <td>{{db.statusResponseCode}}</td>
-          <td>{{db.responseType}}</td>
-          <td>{{db.property}}</td>
-          <td>{{db.propertyDataType}}</td>
-          <td>{{db.isOkValue}}</td>
-          <td>{{db.isDownValue}}</td>
+        <tr *ngFor="let ws of Webservices">
+          <td>{{ws.id}}</td>
+          <td>{{ws.url|truncate:12:false}}</td>
+          <td>{{ws.name}}</td>
+          <td>
+            <button (click)="copy(ws.token)" *ngIf="ws.token;else anadir">Copiar</button>
+            <ng-template #anadir>
+              <button (click)="addToken()">Añadir</button>
+            </ng-template>
+            
+          </td>
+          <td>{{ws.statusResponseCode}}</td>
+          <td>{{ws.responseType}}</td>
+          <td>{{ws.property}}</td>
+          <td>{{ws.propertyDataType}}</td>
+          <td>{{ws.isOkValue}}</td>
+          <td>{{ws.isDownValue}}</td>
         </tr>
       </tbody>
     </table>

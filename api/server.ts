@@ -15,7 +15,7 @@ require('dotenv').config()
  * 
  * ================================================
  */
-
+import "reflect-metadata";
 import { Socket } from 'socket.io';
 import * as express from 'express';
 import { Application } from 'express';
@@ -35,7 +35,6 @@ const objgrep = require('object-grep');
  * 
  * ================================================
  */
-import { ConnectionManager, createConnection, getManager, getRepository } from 'typeorm';
 import { MonitoredSystem, } from './entities/MonitoredSystem';
 import { MonitorConfiguration } from './entities/MonitorConfiguration';
 import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
@@ -43,6 +42,7 @@ import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitorSystemsErrorsHistory } from './entities/MonitoredSystemsErrorsHistory';
 import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
+import { AppDataSource } from "./data-source";
 
 /**
  * ================================================
@@ -54,13 +54,13 @@ import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
 
 let _SYSTEMS: MonitoredSystem[] = [];
 
-createConnection().then(async connection => {
-    const config = await getRepository(MonitorConfiguration).findOne({ where: { activated: 1 } });
-    const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors'] })
+AppDataSource.initialize().then(async connection => {
+    const config = await connection.getRepository(MonitorConfiguration).findOne({ where: { activated: 1 } });
+    const systems = await connection.getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors'] })
 
     const app: Application = express();
     const http = createServer(app);
-    const io = socketio(http);
+    const io = new socketio.Server(http);
     const FETCH_INTERVAL = config.timeInterval || 10000;
 
     // Enviamos por primera vez los datos al usuario
@@ -73,7 +73,7 @@ createConnection().then(async connection => {
     // Proceso de monitoreo
 
     setInterval(async () => {
-        const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors'] })
+        const systems = await connection.getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors'] })
         const systemPromises = systems.map(async system => {
             // console.log(system);
             _SYSTEMS = [];
@@ -201,9 +201,9 @@ createConnection().then(async connection => {
     // Rutas 
     app.delete('/resolve/issue/:id', async (req, res) => {
         const id = req.params.id;
-        const error = await getRepository(MonitorSystemsErrors).findOne({ where: { id: id } });
+        const error = await connection.getRepository(MonitorSystemsErrors).findOne({ where: { id: id } });
         if (error) {
-            const deleted = await getRepository(MonitorSystemsErrors).remove(error);
+            const deleted = await connection.getRepository(MonitorSystemsErrors).remove(error);
             if (deleted) {
                 res.json({ error: false, msg: `Se ha resuelto el error ${error.description}` })
             } else {
@@ -215,7 +215,7 @@ createConnection().then(async connection => {
     });
 
     app.get('/systems/all', async (req, res) => {
-        const systems = await getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors', 'alarmPeople'] })
+        const systems = await connection.getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors', 'alarmPeople'] })
         res.json(systems);
     });
 
@@ -227,17 +227,17 @@ createConnection().then(async connection => {
                 const email = person.email;
                 const name = person.name;
                 if ([systemId, email, name].includes(undefined) === false) {
-                    const system = await getRepository(MonitoredSystem).findOne({ where: { id: systemId } });
+                    const system = await connection.getRepository(MonitoredSystem).findOne({ where: { id: systemId } });
                     if (system) {
                         const personToAttach = new MonitorAlarmPeople();
                         personToAttach.email = email;
                         personToAttach.name = name;
                         personToAttach.system = system;
-                        const alreadyExist = await getRepository(MonitorAlarmPeople).findOne({ where: { email: personToAttach.email, system: system } });
+                        const alreadyExist = await connection.getRepository(MonitorAlarmPeople).findOne({ where: { email: personToAttach.email, system: system } });
                         if (alreadyExist) {
                             return 'Este correo ya está asociado a este sistema.';
                         } else {
-                            return await getRepository(MonitorAlarmPeople).save(personToAttach).then(() =>
+                            return await connection.getRepository(MonitorAlarmPeople).save(personToAttach).then(() =>
                                 `Se ha registrado a ${personToAttach.name} con el correo ${personToAttach.email} al sistema ${personToAttach.system.systemName}`
                             ).catch(e => e);
                         }
@@ -271,9 +271,9 @@ const WebServiceErrorMsg = (wsname, val, expectedValue) => 'Ha ocurrido un error
 async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: string, msg?: string) {
     if (statusCode >= 201) {
 
-        const errorCat = await getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
+        const errorCat = await connection.getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
         if (errorCat) {
-            const latestError = await getRepository(MonitorSystemsErrors).findOne({ where: { system: system, error: errorCat } });
+            const latestError = await connection.getRepository(MonitorSystemsErrors).findOne({ where: { system: system, error: errorCat } });
             if (latestError === undefined) {
                 try {
                     const systemError = new MonitorSystemsErrors();
@@ -303,11 +303,11 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: 
         }
     } else {
         console.log(`[Verificando si hay errores en este sistema][${system.systemName}]`, moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
-        const lastErrors = await getRepository(MonitorSystemsErrors).find({ where: { system: system } });
+        const lastErrors = await connection.getRepository(MonitorSystemsErrors).find({ where: { system: system } });
         if (lastErrors.length > 0) {
             console.log('Se encontraron errores en este sistema... Procediendo a eliminarlos.', moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
             console.log(lastErrors);
-            lastErrors.forEach(error => getRepository(MonitorSystemsErrors).remove(error));
+            lastErrors.forEach(error => connection.getRepository(MonitorSystemsErrors).remove(error));
         }
     }
 }
@@ -350,7 +350,7 @@ async function AnalizingWebServiceContent(ws: MonitoredWebService, response: str
             const result = xml.xml2js(response, { compact: true });
             try {
                 let r = objgrep.objectGrep(result, ws.isOkValue);
-                if (r === {}) {
+                if (r === undefined || r === null || Object.values(r).length === 0) {
                     ErrorHandler(ws.system, 204, ws.name, WebServiceErrorMsg(ws.name, response, ws.isOkValue))
                     console.log('Ha ocurrido un error con ' + ws.name);
                 }

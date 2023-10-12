@@ -2,9 +2,9 @@ import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import Mail, { Attachment } from 'nodemailer/lib/mailer';
 import { getManager } from 'typeorm';
-import { MonitorAlarmPeople } from '../entities/MonitorAlarmPeople';
-import { MonitoredSystem } from '../entities/MonitoredSystem';
-import { MonitorSystemsErrors } from '../entities/MonitorSystemsErrors';
+import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
+import { MonitoredSystem } from './entities/MonitoredSystem';
+import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 
 import * as fs from 'fs';
 import * as handlebars from 'handlebars';

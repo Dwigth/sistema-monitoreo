@@ -43,6 +43,7 @@ import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitorSystemsErrorsHistory } from './entities/MonitoredSystemsErrorsHistory';
 import { MonitorAlarmPeople } from './entities/MonitorAlarmPeople';
 import { AppDataSource } from "./data-source";
+import { DataSource } from "typeorm";
 
 /**
  * ================================================
@@ -55,7 +56,7 @@ import { AppDataSource } from "./data-source";
 let _SYSTEMS: MonitoredSystem[] = [];
 
 AppDataSource.initialize().then(async connection => {
-    const config = await connection.getRepository(MonitorConfiguration).findOne({ where: { activated: 1 } });
+    const config = await connection.getRepository(MonitorConfiguration).findOne({ where: { activated: true } });
     const systems = await connection.getRepository(MonitoredSystem).find({ relations: ['websites', 'databases', 'webservices', 'errors'] })
 
     const app: Application = express();
@@ -117,7 +118,7 @@ AppDataSource.initialize().then(async connection => {
                 // console.log(database);
                 let isConnected = false;
                 try {
-                    const connectionManager = new ConnectionManager();
+                    const connectionManager = AppDataSource;
                     let postgres = {
                         //@ts-ignore
                         type: database.type,
@@ -140,10 +141,10 @@ AppDataSource.initialize().then(async connection => {
                     let connection;
                     if (database.type === 'postgres') {
                         // @ts-ignore
-                        connection = connectionManager.create(postgres);
+                        connection = new DataSource(postgres);
                     } else if (database.type === 'oracle') {
                         // @ts-ignore
-                        connection = connectionManager.create(oracle);
+                        connection = new DataSource(oracle);
                     }
                     const connectResult = await connection.connect();
                     isConnected = connectResult.isConnected;
@@ -201,7 +202,7 @@ AppDataSource.initialize().then(async connection => {
     // Rutas 
     app.delete('/resolve/issue/:id', async (req, res) => {
         const id = req.params.id;
-        const error = await connection.getRepository(MonitorSystemsErrors).findOne({ where: { id: id } });
+        const error = await connection.getRepository(MonitorSystemsErrors).findOne({ where: { id: Number(id) } });
         if (error) {
             const deleted = await connection.getRepository(MonitorSystemsErrors).remove(error);
             if (deleted) {
@@ -271,9 +272,9 @@ const WebServiceErrorMsg = (wsname, val, expectedValue) => 'Ha ocurrido un error
 async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: string, msg?: string) {
     if (statusCode >= 201) {
 
-        const errorCat = await connection.getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
+        const errorCat = await AppDataSource.getRepository(MonitorErrorsCatalog).findOne({ where: { code: statusCode } });
         if (errorCat) {
-            const latestError = await connection.getRepository(MonitorSystemsErrors).findOne({ where: { system: system, error: errorCat } });
+            const latestError = await AppDataSource.getRepository(MonitorSystemsErrors).findOne({ where: { system: system, error: errorCat } });
             if (latestError === undefined) {
                 try {
                     const systemError = new MonitorSystemsErrors();
@@ -288,8 +289,8 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: 
                     SystemErrorHistory.system = system;
                     SystemErrorHistory.timestamp = new Date();
                     SystemErrorHistory.description = (msg != undefined) ? msg : ErrorMsg(type, errorCat.description);
-                    await getManager().save(systemError);
-                    await getManager().save(SystemErrorHistory);
+                    await AppDataSource.getRepository(MonitorSystemsErrors).save(systemError);
+                    await AppDataSource.getRepository(MonitorSystemsErrorsHistory).save(SystemErrorHistory);
                     const alertEmail = new AlertMail();
                     alertEmail.CurrentSystem = system;
                     await alertEmail.SendEmail();
@@ -303,11 +304,11 @@ async function ErrorHandler(system: MonitoredSystem, statusCode: number, type?: 
         }
     } else {
         console.log(`[Verificando si hay errores en este sistema][${system.systemName}]`, moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
-        const lastErrors = await connection.getRepository(MonitorSystemsErrors).find({ where: { system: system } });
+        const lastErrors = await AppDataSource.getRepository(MonitorSystemsErrors).find({ where: { system: system } });
         if (lastErrors.length > 0) {
             console.log('Se encontraron errores en este sistema... Procediendo a eliminarlos.', moment().utc(true).format('YYYY-MM-DD HH:mm:ss'));
             console.log(lastErrors);
-            lastErrors.forEach(error => connection.getRepository(MonitorSystemsErrors).remove(error));
+            lastErrors.forEach(error => AppDataSource.getRepository(MonitorSystemsErrors).remove(error));
         }
     }
 }

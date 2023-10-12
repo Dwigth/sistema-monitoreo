@@ -1,18 +1,27 @@
-# Monitoreo
+# React + TypeScript + Vite
 
-Este proyecto ha sido generado con [Angular CLI](https://github.com/angular/angular-cli) version 9.0.4.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Servidor de desarrollo
+Currently, two official plugins are available:
 
-### Frontend
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Ejecuta `ng serve` para montar el servidor de desarrollo. Navega a `http://localhost:4200/`. La aplicación automáticamente se recargará si detecta cualquier cambio en los archivos fuente.
+## Expanding the ESLint configuration
 
-### Backend
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-Ejecuta `npm run start-server` para montar el servidor de desarrollo. Navega a `http://localhost:3009/`.
+- Configure the top-level `parserOptions` property like this:
 
-## Compilado
+```js
+   parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+   },
+```
 
-Ejecuta `ng build` para compilar el proyecto. Los compilados se almacenarán en el directorio `dist /`. Usa la marca `--prod` para una construcción de producción.
-
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

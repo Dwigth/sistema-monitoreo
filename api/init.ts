@@ -8,7 +8,7 @@ import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
 import { getManager } from "typeorm";
 import { createConnection } from 'typeorm';
 //@ts-ignore
-import * as config from './data.json';
+import * as config from '../data.json';
 
 class StartSequence {
 

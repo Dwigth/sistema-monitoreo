@@ -10,7 +10,7 @@ export class MonitoredDatabase {
     @Column()
     type: string;
 
-    @Column()
+    @Column({ unique: true })
     name: string;
 
     @Column()

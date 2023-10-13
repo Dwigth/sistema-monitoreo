@@ -9,7 +9,7 @@ export class MonitorConfiguration {
     @Column()
     timeInterval: number;
 
-    @Column()
+    @Column({ unique: true })
     label: string;
 
     @Column({ type: 'boolean' })

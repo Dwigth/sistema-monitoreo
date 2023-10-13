@@ -11,7 +11,7 @@ export class MonitoredWebService {
     @Column()
     url: string;
 
-    @Column()
+    @Column({ unique: true })
     name: string;
     @Column({ nullable: true })
     token: string;

@@ -14,26 +14,27 @@ export class StartSequence {
 
         // Insertamos primero la configuración
         if (config.MonitorConfiguration.length > 0) {
+            console.log('Insertando configuraciones');
             Array.from(config.MonitorConfiguration).forEach(async (_config: any) => {
                 const MonitorConfig = new MonitorConfiguration();
                 MonitorConfig.activated = _config.activated;
                 MonitorConfig.label = _config.label;
                 MonitorConfig.timeInterval = _config.timeInterval;
                 await AppDataSource.getRepository(MonitorConfiguration).save(MonitorConfig);
-                console.log('Insertando configuraciones');
             });
+            console.log('Finalizado inserción de configuraciones');
         }
 
         // Despues insertamos el catálogo de errores
+        console.log('Insertando catalogo de errores');
         if (config.ErrorsCatalog.length > 0) {
             Array.from(config.ErrorsCatalog).forEach(async (_errorCatalog: any) => {
                 const monitorErrorsCatalog = new MonitorErrorsCatalog();
                 monitorErrorsCatalog.code = _errorCatalog.code;
                 monitorErrorsCatalog.description = _errorCatalog.description;
                 await AppDataSource.getRepository(MonitorErrorsCatalog).save(monitorErrorsCatalog);
-                console.log('Insertando catalogo de errores');
-
             });
+            console.log('Finalizado catalogo de errores');
         }
 
         if (config.Systems.length > 0) {
@@ -52,7 +53,7 @@ export class StartSequence {
                         website.statusResponseCode = _website.statusResponseCode;
                         website.system = savedSystem;
                         await AppDataSource.getRepository(MonitoredWebsite).save(website);
-                        console.log('Insertando sitio web');
+                        console.log('Insertando sitio web ' + website.name + ' de ' + system.systemName);
                     }
                 });
                 Array.from(_system.webservices).forEach(async (_webservice: any) => {
@@ -69,7 +70,7 @@ export class StartSequence {
                         webservice.url = _webservice.url;
                         webservice.system = savedSystem;
                         await AppDataSource.getRepository(MonitoredWebService).save(webservice);
-                        console.log('Insertando servicio web');
+                        console.log('Insertando servicio web ' + webservice.name + ' de ' + system.systemName);
                     }
                 });
                 Array.from(_system.databases).forEach(async (_databases: any) => {
@@ -87,7 +88,7 @@ export class StartSequence {
                         database.username = _databases.username;
                         database.system = savedSystem;
                         await AppDataSource.getRepository(MonitoredDatabase).save(database);
-                        console.log('Insertando base de datos');
+                        console.log('Insertando base de datos ' + database.name + ' de ' + system.systemName);
                     }
                 });
 

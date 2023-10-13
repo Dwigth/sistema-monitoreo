@@ -10,7 +10,7 @@ export class MonitoredWebsite {
     @Column()
     url: string;
 
-    @Column()
+    @Column({ unique: true })
     name: string;
 
     @Column()

@@ -7,7 +7,7 @@ export class MonitorErrorsCatalog {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ unique: true })
     code: number;
 
     @Column()

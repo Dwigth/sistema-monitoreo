@@ -12,7 +12,7 @@ export class MonitoredSystem {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ unique: true })
     systemName: string;
 
     @Column("datetime", { nullable: true })

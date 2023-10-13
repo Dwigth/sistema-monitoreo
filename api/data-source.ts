@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import entities from "./entities";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
@@ -6,6 +7,6 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
     entities: [
-        "dist/entities/*.js"
+        ...entities
     ],
 })

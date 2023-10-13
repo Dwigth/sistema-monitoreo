@@ -5,19 +5,10 @@ import { MonitoredWebService } from './entities/MonitoredWebService';
 import { MonitoredWebsite } from './entities/MonitoredWebsite';
 import { MonitorSystemsErrors } from './entities/MonitorSystemsErrors';
 import { MonitorErrorsCatalog } from './entities/MonitorErrorsCatalog';
-import { getManager } from "typeorm";
-import { createConnection } from 'typeorm';
-//@ts-ignore
-import * as config from '../data.json';
+import * as config from './data.json';
+import { AppDataSource } from './data-source';
 
-class StartSequence {
-
-    constructor() {
-        createConnection().then(async connection => {
-            await this.DeleteAll();
-            await this.InsertAll();
-        });
-    }
+export class StartSequence {
 
     async InsertAll() {
 
@@ -28,9 +19,8 @@ class StartSequence {
                 MonitorConfig.activated = _config.activated;
                 MonitorConfig.label = _config.label;
                 MonitorConfig.timeInterval = _config.timeInterval;
-                await getManager().save(MonitorConfig);
+                await AppDataSource.getRepository(MonitorConfiguration).save(MonitorConfig);
                 console.log('Insertando configuraciones');
-
             });
         }
 
@@ -40,7 +30,7 @@ class StartSequence {
                 const monitorErrorsCatalog = new MonitorErrorsCatalog();
                 monitorErrorsCatalog.code = _errorCatalog.code;
                 monitorErrorsCatalog.description = _errorCatalog.description;
-                await getManager().save(monitorErrorsCatalog);
+                await AppDataSource.getRepository(MonitorErrorsCatalog).save(monitorErrorsCatalog);
                 console.log('Insertando catalogo de errores');
 
             });
@@ -51,7 +41,7 @@ class StartSequence {
                 let system = new MonitoredSystem();
                 system.upDate = new Date();
                 system.systemName = _system.systemName;
-                const savedSystem = await getManager().save(system);
+                const savedSystem = await AppDataSource.getRepository(MonitoredSystem).save(system);
                 console.log('Insertando sistema: ', savedSystem.systemName);
 
                 Array.from(_system.websites).forEach(async (_website: any) => {
@@ -61,7 +51,7 @@ class StartSequence {
                         website.url = _website.url;
                         website.statusResponseCode = _website.statusResponseCode;
                         website.system = savedSystem;
-                        await getManager().save(website);
+                        await AppDataSource.getRepository(MonitoredWebsite).save(website);
                         console.log('Insertando sitio web');
                     }
                 });
@@ -78,7 +68,7 @@ class StartSequence {
                         webservice.token = _webservice.token;
                         webservice.url = _webservice.url;
                         webservice.system = savedSystem;
-                        await getManager().save(webservice);
+                        await AppDataSource.getRepository(MonitoredWebService).save(webservice);
                         console.log('Insertando servicio web');
                     }
                 });
@@ -96,7 +86,7 @@ class StartSequence {
                         database.type = _databases.type;
                         database.username = _databases.username;
                         database.system = savedSystem;
-                        await getManager().save(database);
+                        await AppDataSource.getRepository(MonitoredDatabase).save(database);
                         console.log('Insertando base de datos');
                     }
                 });
@@ -108,35 +98,33 @@ class StartSequence {
     async DeleteAll() {
         console.log('Borramos configuraciones');
         // Borramos todo
-        const configs = await getManager().find(MonitorConfiguration);
-        configs.forEach(async (mc) => await getManager().remove(mc));
+        const configs = await AppDataSource.getRepository(MonitorConfiguration).find();
+        configs.forEach(async (mc) => await AppDataSource.getRepository(MonitorConfiguration).remove(mc));
 
         console.log('Borramos bases de datos');
-        const databases = await getManager().find(MonitoredDatabase);
-        databases.forEach(async (mc) => await getManager().remove(mc));
+        const databases = await AppDataSource.getRepository(MonitoredDatabase).find();
+        databases.forEach(async (mc) => await AppDataSource.getRepository(MonitoredDatabase).remove(mc));
 
         console.log('Borramos bases de servicios webs');
-        const webservices = await getManager().find(MonitoredWebService);
-        webservices.forEach(async (mc) => await getManager().remove(mc));
+        const webservices = await AppDataSource.getRepository(MonitoredWebService).find();
+        webservices.forEach(async (mc) => await AppDataSource.getRepository(MonitoredWebService).remove(mc));
 
         console.log('Borramos sitios web');
-        const websites = await getManager().find(MonitoredWebsite);
-        websites.forEach(async (mc) => await getManager().remove(mc));
+        const websites = await AppDataSource.getRepository(MonitoredWebsite).find();
+        websites.forEach(async (mc) => await AppDataSource.getRepository(MonitoredWebsite).remove(mc));
 
         console.log('Borramos sistemas');
-        const systems = await getManager().find(MonitoredSystem);
-        systems.forEach(async (mc) => await getManager().remove(mc));
+        const systems = await AppDataSource.getRepository(MonitoredWebsite).find();
+        systems.forEach(async (mc) => await AppDataSource.getRepository(MonitoredWebsite).remove(mc));
 
         console.log('Borramos errores')
 
 
-        const systemErrors = await getManager().find(MonitorSystemsErrors);
-        systemErrors.forEach(async (mc) => await getManager().remove(mc));
+        const systemErrors = await AppDataSource.getRepository(MonitorSystemsErrors).find();
+        systemErrors.forEach(async (mc) => await AppDataSource.getRepository(MonitorSystemsErrors).remove(mc));
 
-        const errorCatalog = await getManager().find(MonitorErrorsCatalog);
-        errorCatalog.forEach(async (mc) => await getManager().remove(mc));
+        const errorCatalog = await AppDataSource.getRepository(MonitorErrorsCatalog).find();
+        errorCatalog.forEach(async (mc) => await AppDataSource.getRepository(MonitorErrorsCatalog).remove(mc));
     }
 
 }
-
-new StartSequence();

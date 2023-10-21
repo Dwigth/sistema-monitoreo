@@ -27,7 +27,7 @@ const initSequence = async () => {
 }
 Promise.resolve(AppDataSource.initialize()).then(async connection => {
     await initSequence()
-    main(io, connection);
+    //main(io, connection);
 })
 
 
